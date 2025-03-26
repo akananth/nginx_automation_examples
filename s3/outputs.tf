@@ -1,9 +1,12 @@
+# S3 Bucket Details
 output "s3_bucket_created" {
-  value = !local.bucket_exists
+  description = "Whether the S3 bucket was created."
+  value       = length(aws_s3_bucket.terraform_state_bucket) > 0 ? true : false
 }
 
 output "s3_bucket_name" {
-  value = local.bucket_exists ? var.tf_state_bucket : aws_s3_bucket.terraform_state_bucket[0].bucket
+  description = "The name of the S3 bucket."
+  value       = length(aws_s3_bucket.terraform_state_bucket) > 0 ? aws_s3_bucket.terraform_state_bucket[0].bucket : null
 }
 
 # DynamoDB Table Details
