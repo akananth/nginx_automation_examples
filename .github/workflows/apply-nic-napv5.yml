@@ -4,6 +4,7 @@ on:
     branches: apply-nic-napv5
 env:
   AWS_REGION: us-east-1
+  
 jobs:
   terraform_bootstrap:
     name: "Bootstrap S3/DynamoDB"
