@@ -1,10 +1,19 @@
-# Safe S3 bucket existence check
+data "aws_caller_identity" "current" {}
+
+# Safe S3 bucket existence check with proper error handling
 data "external" "bucket_check" {
   program = ["bash", "-c", <<EOT
-    if aws s3api head-bucket --bucket ${var.tf_state_bucket} --region ${var.aws_region} 2>/dev/null; then
-      echo '{"exists":"true"}'
+    # Ensure consistent JSON output
+    output=$(aws s3api head-bucket --bucket ${var.tf_state_bucket} --region ${var.aws_region} 2>&1)
+    status=$?
+    
+    if [ $status -eq 0 ]; then
+      echo '{"exists":"true", "message":"Bucket exists"}'
+    elif echo "$output" | grep -q '404'; then
+      echo '{"exists":"false", "message":"Bucket not found"}'
     else
-      echo '{"exists":"false"}'
+      echo '{"exists":"error", "message":"'$(echo "$output" | jq -R -s -c '.')'"}'
+      exit 1
     fi
   EOT
   ]
@@ -13,30 +22,51 @@ data "external" "bucket_check" {
 # Safe DynamoDB table existence check
 data "external" "dynamodb_table_check" {
   program = ["bash", "-c", <<EOT
-    if aws dynamodb describe-table --table-name terraform-lock-table --region ${var.aws_region} >/dev/null 2>&1; then
+    if output=$(aws dynamodb describe-table \
+      --table-name terraform-lock-table \
+      --region ${var.aws_region} 2>&1); then
       echo '{"exists":"true"}'
-    else
+    elif echo "$output" | grep -q 'ResourceNotFoundException'; then
       echo '{"exists":"false"}'
+    else
+      echo '{"exists":"error", "message":"'$(echo "$output" | jq -R -s -c '.')'"}'
+      exit 1
     fi
   EOT
   ]
 }
 
 locals {
-  bucket_exists    = data.external.bucket_check.result.exists == "true"
-  dynamodb_exists  = data.external.dynamodb_table_check.result.exists == "true"
+  # Handle bucket existence with error checking
+  bucket_exists = try(
+    data.external.bucket_check.result.exists == "true",
+    false
+  )
+  
+  # Handle DynamoDB existence with error checking
+  dynamodb_exists = try(
+    data.external.dynamodb_table_check.result.exists == "true",
+    false
+  )
+  
+  # Generate unique bucket name if needed
+  unique_bucket_name = "${var.tf_state_bucket}-${data.aws_caller_identity.current.account_id}"
 }
 
 # S3 Bucket Resources
 resource "aws_s3_bucket" "terraform_state" {
   count = local.bucket_exists ? 0 : 1
 
-  bucket        = var.tf_state_bucket
-  force_destroy = false  # Safety measure to prevent accidental deletion
+  bucket        = local.unique_bucket_name  # Use unique name to avoid conflicts
+  force_destroy = false
 
   tags = {
     Name        = "Terraform State Bucket"
     Environment = "Global"
+  }
+
+  lifecycle {
+    prevent_destroy = true  # Extra protection
   }
 }
 
@@ -76,5 +106,9 @@ resource "aws_dynamodb_table" "terraform_locks" {
   tags = {
     Name        = "Terraform State Lock Table"
     Environment = "Global"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
