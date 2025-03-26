@@ -1,4 +1,3 @@
-data "aws_caller_identity" "current" {}
 
 # Safe S3 bucket existence check with proper error handling
 data "external" "bucket_check" {
@@ -12,7 +11,7 @@ data "external" "bucket_check" {
     elif echo "$output" | grep -q '404'; then
       echo '{"exists":"false", "message":"Bucket not found"}'
     else
-      echo '{"exists":"error", "message":"'$(echo "$output" | jq -R -s -c '.')'"}'
+      echo '{"exists":"error", "message":"'$(echo "$output" | tr -d '\n')'"}'
       exit 1
     fi
   EOT
@@ -29,7 +28,7 @@ data "external" "dynamodb_table_check" {
     elif echo "$output" | grep -q 'ResourceNotFoundException'; then
       echo '{"exists":"false"}'
     else
-      echo '{"exists":"error", "message":"'$(echo "$output" | jq -R -s -c '.')'"}'
+      echo '{"exists":"error", "message":"'$(echo "$output" | tr -d '\n')'"}'
       exit 1
     fi
   EOT
@@ -57,7 +56,7 @@ locals {
 resource "aws_s3_bucket" "terraform_state" {
   count = local.bucket_exists ? 0 : 1
 
-  bucket        = local.unique_bucket_name  # Use unique name to avoid conflicts
+  bucket        = local.unique_bucket_name
   force_destroy = false
 
   tags = {
@@ -66,7 +65,7 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 
   lifecycle {
-    prevent_destroy = true  # Extra protection
+    prevent_destroy = true
   }
 }
 
