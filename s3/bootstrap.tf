@@ -1,19 +1,20 @@
-# Check bucket existence safely
-data "aws_s3_bucket" "state_bucket" {
-  count  = var.check_bucket_exists ? 1 : 0
-  bucket = var.tf_state_bucket
+data "external" "bucket_check" {
+  program = ["bash", "-c", <<EOT
+    if aws s3api head-bucket --bucket ${var.tf_state_bucket} --region ${var.aws_region} 2>&1 | grep -q '404'; then
+      echo '{"exists":"false"}'
+    else
+      echo '{"exists":"true"}'
+    fi
+  EOT
+  ]
 }
 
 locals {
-  # Determine if bucket exists
-  bucket_exists = var.check_bucket_exists && length(data.aws_s3_bucket.state_bucket) > 0
-  
-  # Get bucket properties safely
-  bucket_name = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].bucket : var.tf_state_bucket
-  bucket_arn  = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].arn : null
+  # Convert string "true"/"false" to boolean
+  bucket_exists = data.external.bucket_check.result.exists == "true"
 }
 
-# Create bucket only if needed
+# Create bucket only if it doesn't exist
 resource "aws_s3_bucket" "terraform_state_bucket" {
   count = local.bucket_exists ? 0 : 1
   
@@ -25,7 +26,7 @@ resource "aws_s3_bucket" "terraform_state_bucket" {
   }
 }
 
-# Configure versioning (only if bucket is new)
+# Configure versioning if creating new bucket
 resource "aws_s3_bucket_versioning" "state_bucket" {
   count = local.bucket_exists ? 0 : 1
 
