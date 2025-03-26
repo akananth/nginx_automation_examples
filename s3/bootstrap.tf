@@ -1,10 +1,9 @@
-# Use native Terraform AWS provider to check bucket existence
 data "aws_s3_bucket" "state_bucket" {
   bucket = var.tf_state_bucket
 }
 
 locals {
-  bucket_exists = can(data.aws_s3_bucket.state_bucket.id)
+  bucket_exists = can(data.aws_s3_bucket.state_bucket.id)  # Returns `true`/`false` without errors
 }
 
 # Create S3 bucket only if missing
