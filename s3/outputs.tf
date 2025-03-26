@@ -1,16 +1,15 @@
-# Outputs
+# Outputs (safe for all cases)
 output "s3_bucket_created" {
   value = !local.bucket_exists
 }
 
 output "s3_bucket_name" {
-  value = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].bucket : aws_s3_bucket.terraform_state_bucket[0].bucket
+  value = local.bucket_exists ? local.bucket_name : aws_s3_bucket.terraform_state_bucket[0].bucket
 }
 
 output "s3_bucket_arn" {
-  value = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].arn : aws_s3_bucket.terraform_state_bucket[0].arn
+  value = local.bucket_exists ? local.bucket_arn : aws_s3_bucket.terraform_state_bucket[0].arn
 }
-
 
 # DynamoDB Table Details
 output "dynamodb_table_created" {
