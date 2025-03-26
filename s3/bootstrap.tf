@@ -6,12 +6,12 @@ data "aws_s3_bucket" "state_bucket" {
 
 locals {
   # Handle all cases: when check is disabled, when bucket exists, or when it doesn't
-  bucket_exists = (
-    var.check_bucket_exists ? 
-    (length(data.aws_s3_bucket.state_bucket) > 0 ? true : false) : 
-    false
+  bucket_exists = var.check_bucket_exists ? 
+                 (length(data.aws_s3_bucket.state_bucket) > 0) : 
+                 false
+  
   bucket_name = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].bucket : var.tf_state_bucket
-  bucket_arn = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].arn : null
+  bucket_arn  = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].arn : null
 }
 
 # Create bucket only if needed
@@ -20,6 +20,7 @@ resource "aws_s3_bucket" "terraform_state_bucket" {
   
   bucket        = var.tf_state_bucket
   force_destroy = true
+  
   tags = {
     Name = "Terraform State Bucket"
   }
