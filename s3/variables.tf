@@ -1,7 +1,7 @@
 variable "tf_state_bucket" {
   type        = string
   description = "S3 bucket for Terraform state"
-  default     = "demo-terraform-bucket" 
+  default     = "aws5-terraform" 
 }
 
 
