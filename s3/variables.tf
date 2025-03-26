@@ -1,7 +1,7 @@
 variable "tf_state_bucket" {
   type        = string
   description = "S3 bucket for Terraform state"
-  default     = "your-unique-bucket-name" 
+  default     = "s3-bucket" 
 }
 variable "create_iam_resources" {
   description = "Whether to create IAM resources (role and policy)."
