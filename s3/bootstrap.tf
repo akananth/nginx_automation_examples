@@ -1,20 +1,12 @@
+# Check if bucket exists (conditional check)
 data "aws_s3_bucket" "state_bucket" {
+  count  = var.check_bucket_exists ? 1 : 0
   bucket = var.tf_state_bucket
 }
 
 locals {
-  bucket_exists = can(data.aws_s3_bucket.state_bucket.id)  # Returns `true`/`false` without errors
-}
-
-# Check if bucket exists (works even when bucket is missing)
-data "aws_s3_bucket" "state_bucket" {
-  count = var.check_bucket_exists ? 1 : 0
-  bucket = var.tf_state_bucket
-}
-
-locals {
-  # Returns true if bucket exists, false otherwise (no error)
-  bucket_exists = var.check_bucket_exists ? length(data.aws_s3_bucket.state_bucket) > 0 && data.aws_s3_bucket.state_bucket[0].id != "" : false
+  # Safe bucket existence check
+  bucket_exists = var.check_bucket_exists ? length(data.aws_s3_bucket.state_bucket) > 0 : false
 }
 
 # Create bucket only if it doesn't exist
@@ -51,7 +43,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "state_bucket" {
   }
 }
 
-# Check DynamoDB table existence (using external is fine for DynamoDB)
+# Check DynamoDB table existence
 data "external" "dynamodb_table_check" {
   program = ["bash", "-c", <<EOT
     if aws dynamodb describe-table --table-name terraform-lock-table --region ${var.aws_region} >/dev/null 2>&1; then
@@ -80,3 +72,4 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
     Name = "Terraform State Lock Table"
   }
 }
+
