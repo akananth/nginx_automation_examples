@@ -1,5 +1,4 @@
 data "aws_caller_identity" "current" {}
-
 # Create IAM role if it doesn't exist
 resource "aws_iam_role" "terraform_execution_role" {
   count = var.create_iam_resources ? 1 : 0
