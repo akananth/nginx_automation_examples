@@ -5,11 +5,10 @@ data "aws_s3_bucket" "state_bucket" {
 }
 
 locals {
-  # Handle all cases: when check is disabled, when bucket exists, or when it doesn't
-  bucket_exists = var.check_bucket_exists ? 
-                 (length(data.aws_s3_bucket.state_bucket) > 0) : 
-                 false
+  # Determine if bucket exists
+  bucket_exists = var.check_bucket_exists && length(data.aws_s3_bucket.state_bucket) > 0
   
+  # Get bucket properties safely
   bucket_name = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].bucket : var.tf_state_bucket
   bucket_arn  = local.bucket_exists ? data.aws_s3_bucket.state_bucket[0].arn : null
 }

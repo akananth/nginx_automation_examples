@@ -1,4 +1,4 @@
-# Outputs (safe for all cases)
+# Outputs
 output "s3_bucket_created" {
   value = !local.bucket_exists
 }
