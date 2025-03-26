@@ -6,13 +6,24 @@ locals {
   bucket_exists = can(data.aws_s3_bucket.state_bucket.id)  # Returns `true`/`false` without errors
 }
 
-# Create S3 bucket only if missing
+# Check if bucket exists (works even when bucket is missing)
+data "aws_s3_bucket" "state_bucket" {
+  count = var.check_bucket_exists ? 1 : 0
+  bucket = var.tf_state_bucket
+}
+
+locals {
+  # Returns true if bucket exists, false otherwise (no error)
+  bucket_exists = var.check_bucket_exists ? length(data.aws_s3_bucket.state_bucket) > 0 && data.aws_s3_bucket.state_bucket[0].id != "" : false
+}
+
+# Create bucket only if it doesn't exist
 resource "aws_s3_bucket" "terraform_state_bucket" {
-  count = local.bucket_exists ? 0 : 1  # Only create if bucket doesn’t exist
-
+  count = local.bucket_exists ? 0 : 1
+  
   bucket        = var.tf_state_bucket
-  force_destroy = true  # ⚠️ Only for testing; disable in production
-
+  force_destroy = true
+  
   tags = {
     Name = "Terraform State Bucket"
   }
