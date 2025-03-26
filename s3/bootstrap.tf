@@ -53,7 +53,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "state_bucket" {
     }
   }
 }
-
 # Create DynamoDB table only if missing
 resource "aws_dynamodb_table" "terraform_state_lock" {
   count = data.external.dynamodb_table_check.result.exists == "true" ? 0 : 1
