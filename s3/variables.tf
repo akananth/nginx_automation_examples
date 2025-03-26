@@ -4,8 +4,6 @@ variable "tf_state_bucket" {
   default     = "akash-terraform-bucket" 
 }
 
-hcl
-Copy
 variable "check_bucket_exists" {
   description = "Whether to check if bucket already exists"
   type        = bool
