@@ -1,4 +1,4 @@
-Create network interfaces for VMs
+# Create network interfaces for VMs
 resource "azurerm_network_interface" "vm_nic" {
   count               = 2
   name                = "${var.name_prefix}-vm${count.index + 1}-nic"
@@ -55,3 +55,4 @@ resource "local_file" "cloud_init" {
     nginx_key  = base64encode(var.nginx_plus_key)
   })
   filename = "${path.module}/cloud-init.yaml"
+}
