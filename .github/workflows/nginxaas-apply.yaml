@@ -1,0 +1,60 @@
+name: 'Terraform Apply'
+
+on:
+  push:
+    branches: nginxaas-apply
+
+jobs:
+  terraform:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: ./azure/nginxaas
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.3.0
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -out=tfplan
+        env:
+          TF_VAR_project_prefix: ${{ vars.project_prefix }}
+          TF_VAR_azure_region: ${{ vars.azure_region }}
+          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+          TF_VAR_nginx_plus_cert: ${{ secrets.TF_VAR_nginx_plus_cert }}
+          TF_VAR_nginx_plus_key: ${{ secrets.TF_VAR_nginx_plus_key }}
+
+      - name: Terraform Apply
+        run: terraform apply -input=false -auto-approve
+        env:
+          TF_VAR_project_prefix: ${{ vars.project_prefix }}
+          TF_VAR_azure_region: ${{ vars.azure_region }}
+          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+
+      - name: Output Deployment Results
+        run: |
+          echo "NGINX Endpoint: $(terraform output -raw nginx_endpoint)"
+          echo "VM Public IPs: $(terraform output -json vm_public_ips)"
