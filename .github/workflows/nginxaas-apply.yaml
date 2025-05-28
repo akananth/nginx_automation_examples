@@ -1,5 +1,4 @@
 name: 'Terraform Apply'
-
 on:
   push:
     branches: nginxaas-apply
