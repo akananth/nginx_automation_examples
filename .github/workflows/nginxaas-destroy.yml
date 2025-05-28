@@ -1,0 +1,65 @@
+name: 'Terraform Destroy'
+
+on:
+  push:
+    branches: nginxaas-destroy
+
+jobs:
+  terraform:
+    name: 'Terraform Destroy'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: ./azure/nginxaas
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.3.0
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+          TF_VAR_container_name: ${{ vars.storage_account_name }}-container
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false
+        env:
+          TF_VAR_project_prefix: ${{ vars.project_prefix }}
+          TF_VAR_azure_region: ${{ vars.azure_region }}
+          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+          TF_VAR_nginx_plus_cert: ${{ secrets.TF_VAR_nginx_plus_cert }}
+          TF_VAR_nginx_plus_key: ${{ secrets.TF_VAR_nginx_plus_key }}
+
+      - name: Verify Resource Cleanup
+        run: |
+          echo "Verifying resource cleanup..."
+          az group show --name ${{ vars.project_prefix }}-rg || echo "Resource group already removed"
+          
+          echo "Checking NGINXaaS deployments..."
+          az nginx deployment list --resource-group ${{ vars.project_prefix }}-rg \
+            --query "[].name" -o tsv | while read -r deployment; do
+            echo "Found remaining deployment: $deployment"
+            exit 1
+          done
+
+      - name: Cleanup Provider Registration
+        if: always()
+        run: |
+          echo "Unregistering NGINX provider..."
+          az provider unregister --namespace NGINX.NGINXPLUS --yes
+          echo "Re-registering NGINX provider..."
+          az provider register --namespace NGINX.NGINXPLUS
