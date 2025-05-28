@@ -1,4 +1,4 @@
-name: "NGINX NIC/NAP-V5 AWS Deployment"
+name: "NGINX NIC/NAP-V5 AWSDeployment"
 on:
   push:
     branches: apply-nic-napv5
