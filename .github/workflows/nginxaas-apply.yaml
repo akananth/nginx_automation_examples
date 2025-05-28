@@ -20,7 +20,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Now includes subscriptionId
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -55,6 +55,9 @@ jobs:
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
 
       - name: Output Deployment Results
+        id: outputs
         run: |
+          echo "NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint)" >> $GITHUB_OUTPUT
+          echo "VM_PUBLIC_IPS=$(terraform output -json vm_public_ips | jq -c)" >> $GITHUB_OUTPUT
           echo "NGINX Endpoint: $(terraform output -raw nginx_endpoint)"
           echo "VM Public IPs: $(terraform output -json vm_public_ips)"
