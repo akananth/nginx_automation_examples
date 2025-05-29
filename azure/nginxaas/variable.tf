@@ -110,19 +110,19 @@ variable "security_rules" {
   }]
 }
 
-variable "TF_VAR_ssh_public_key" {
+variable "ssh_public_key" {
   type        = string
   description = "SSH public key for VM access"
   sensitive   = true
 }
 
-variable "TF_VAR_nginx_plus_cert" {
+variable "nginx_plus_cert" {
   type        = string
   description = "NGINX Plus certificate (base64 encoded)"
   sensitive   = true
 }
 
-variable "TF_VAR_nginx_plus_key" {
+variable "nginx_plus_key" {
   type        = string
   description = "NGINX Plus private key (base64 encoded)"
   sensitive   = true
