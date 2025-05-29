@@ -110,23 +110,19 @@ variable "security_rules" {
   }]
 }
 
-variable "ssh_public_key" {
+variable "TF_VAR_ssh_public_key" {
   type        = string
   description = "SSH public key for VM access"
   sensitive   = true
-  validation {
-    condition     = length(trimspace(var.ssh_public_key)) > 0
-    error_message = "SSH public key must not be empty"
-  }
 }
 
-variable "nginx_plus_cert" {
+variable "TF_VAR_nginx_plus_cert" {
   type        = string
   description = "NGINX Plus certificate (base64 encoded)"
   sensitive   = true
 }
 
-variable "nginx_plus_key" {
+variable "TF_VAR_nginx_plus_key" {
   type        = string
   description = "NGINX Plus private key (base64 encoded)"
   sensitive   = true
