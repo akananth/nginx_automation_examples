@@ -27,15 +27,7 @@ jobs:
         with:
           terraform_version: 1.3.0
       
-      - name: Verify SSH Key
-        run: |
-         if [ -z "${{ secrets.TF_VAR_ssh_public_key }}" ]; then
-           echo "::error::SSH public key is empty!"
-           exit 1
-         else
-          echo "SSH key is set (first 10 chars: ${${{ secrets.TF_VAR_ssh_public_key }}:0:10})"
-         fi
-
+      
       - name: Terraform Init
         run: terraform init
         env:
