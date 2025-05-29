@@ -39,7 +39,7 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
   # Only add SSH key if it's not empty
   admin_ssh_key {
     username   = "adminuser"
-    public_key = var.TF_VAR_ssh_public_key  # Changed
+    public_key = var.ssh_public_key  # Changed
   }
   os_disk {
     caching              = "ReadWrite"
@@ -54,7 +54,7 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
   }
 
   custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
-    nginx_cert = base64encode(var.TF_VAR_nginx_plus_cert)  # Changed
-    nginx_key  = base64encode(var.TF_VAR_nginx_plus_key)   # Changed
+    nginx_cert = base64encode(var.nginx_plus_cert)  # Changed
+    nginx_key  = base64encode(var.nginx_plus_key)   # Changed
   }))
 }
