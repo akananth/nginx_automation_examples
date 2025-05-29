@@ -1,7 +1,18 @@
+# Create public IPs for VMs
+resource "azurerm_public_ip" "vm_pip" {
+  count               = 2
+  name                = "${var.project_prefix}-vm${count.index + 1}-pip"  # FIXED
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  tags                = var.tags
+}
+
 # Create network interfaces for VMs
 resource "azurerm_network_interface" "vm_nic" {
   count               = 2
-  name                = "${var.name_prefix}-vm${count.index + 1}-nic"
+  name                = "${var.project_prefix}-vm${count.index + 1}-nic"  # FIXED
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -9,14 +20,14 @@ resource "azurerm_network_interface" "vm_nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.main.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.main.id
+    public_ip_address_id          = azurerm_public_ip.vm_pip[count.index].id
   }
 }
 
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
-  name                = "${var.name_prefix}-vm${count.index + 1}"
+  name                = "${var.project_prefix}-vm${count.index + 1}"  # FIXED
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
@@ -42,17 +53,8 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(templatefile("${path.module}/cloud-init.yaml", {
+  custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
     nginx_cert = base64encode(var.nginx_plus_cert)
     nginx_key  = base64encode(var.nginx_plus_key)
   }))
-}
-
-# Cloud-init configuration file
-resource "local_file" "cloud_init" {
-  content = templatefile("${path.module}/cloud-init.tpl", {
-    nginx_cert = base64encode(var.nginx_plus_cert)
-    nginx_key  = base64encode(var.nginx_plus_key)
-  })
-  filename = "${path.module}/cloud-init.yaml"
 }
