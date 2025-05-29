@@ -38,12 +38,14 @@ jobs:
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -input=false
         env:
-          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
+          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
       - name: Force Delete Resource Group
         if: always()
@@ -57,7 +59,7 @@ jobs:
           # Check if provider is registered
           if az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Registered"; then
             echo "Unregistering NGINX provider..."
-            az provider unregister --namespace NGINX.NGINXPLUS --yes
+            az provider unregister --namespace NGINX.NGINXPLUS
             
             # Wait for unregistration to complete
             while az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Unregistering"; do
@@ -80,8 +82,9 @@ jobs:
           fi
           
           # Check NGINX provider registration
-          if az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Registered"; then
-            echo "::error::NGINX provider still registered!"
+          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+          if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
+            echo "::error::NGINX provider still registered or unregistering!"
             exit 1
           fi
           
