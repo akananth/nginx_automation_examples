@@ -11,7 +11,6 @@ output "managed_identity_id" {
   value = azurerm_user_assigned_identity.main.id
 }
 
-# NGINXaaS Outputs - KEEP THIS ONE
 output "nginx_endpoint" {
   description = "NGINXaaS public IP address"
   value       = azurerm_public_ip.main.ip_address
@@ -22,10 +21,9 @@ output "nginx_deployment_id" {
   value       = azurerm_nginx_deployment.main.id
 }
 
-# VM Outputs - UPDATED TO USE NEW PUBLIC IPs
 output "vm_public_ips" {
   description = "Public IP addresses of the VMs"
-  value       = azurerm_public_ip.vm_pip[*].ip_address  # Use the new public IP resources
+  value       = azurerm_public_ip.vm_pip[*].ip_address
 }
 
 output "vm_ssh_commands" {
