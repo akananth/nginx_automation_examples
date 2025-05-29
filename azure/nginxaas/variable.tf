@@ -12,18 +12,14 @@ variable "subscription_id" {
   description = "Azure Subscription ID"
 }
 
+# variables.tf
 variable "azure_region" {
   type        = string
   description = "Azure deployment region"
   default     = "eastus2"
   validation {
-    condition     = contains([
-      "eastus", "eastus2", "westus", "westus2", 
-      "centralus", "northcentralus", "southcentralus",
-      "westeurope", "northeurope", "uksouth", "ukwest",
-      "southeastasia", "eastasia", "australiaeast", "australiasoutheast"
-    ], lower(var.azure_region))
-    error_message = "Valid regions: eastus, eastus2, westus, westus2, centralus, northcentralus, southcentralus, westeurope, northeurope, uksouth, ukwest, southeastasia, eastasia, australiaeast, australiasoutheast."
+    condition     = can(regex("^(east|west|central|north|south|uk|australia|southeastasia|eastasia)", lower(var.azure_region)))
+    error_message = "Must be a valid Azure region name (e.g., eastus2, westeurope)."
   }
 }
 
