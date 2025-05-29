@@ -13,12 +13,19 @@ provider "azurerm" {
   subscription_id = var.subscription_id  # ADD THIS LINE
 }
 
-# Provider Registration (Must be first)
-resource "azurerm_resource_provider_registration" "nginx" {
+# Conditionally register provider only if not already registered
+data "azurerm_resource_provider" "nginx" {
   name = "NGINX.NGINXPLUS"
 }
 
+resource "azurerm_resource_provider_registration" "nginx" {
+  count = data.azurerm_resource_provider.nginx.registration_state == "Registered" ? 0 : 1
+  name  = "NGINX.NGINXPLUS"
+}
+
+# Add a 2-minute wait only if registration was performed
 resource "time_sleep" "wait_2_minutes" {
+  count           = data.azurerm_resource_provider.nginx.registration_state == "Registered" ? 0 : 1
   depends_on      = [azurerm_resource_provider_registration.nginx]
   create_duration = "120s"
 }
@@ -110,7 +117,7 @@ resource "azurerm_role_assignment" "contributor" {
 }
 
 resource "azurerm_role_assignment" "network_contributor" {
-  scope                = azurerm_virtual_network.main.id
+  scope                = azurerm_subnet.main.id  # More granular scope
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_user_assigned_identity.main.principal_id
 }
@@ -118,7 +125,7 @@ resource "azurerm_role_assignment" "network_contributor" {
 # NGINX Deployment
 resource "azurerm_nginx_deployment" "main" {
   depends_on = [
-    time_sleep.wait_2_minutes,
+    data.azurerm_resource_provider.nginx.registration_state == "Registered" ? null : time_sleep.wait_2_minutes[0],
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
     azurerm_subnet_network_security_group_association.main
