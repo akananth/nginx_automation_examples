@@ -122,10 +122,17 @@ resource "azurerm_role_assignment" "network_contributor" {
   principal_id         = azurerm_user_assigned_identity.main.principal_id
 }
 
+resource "null_resource" "wait_for_provider" {
+  count = data.azurerm_resource_provider.nginx.registration_state == "Registered" ? 0 : 1
+  
+  provisioner "local-exec" {
+    command = "sleep 120"
+  }
+}
 # NGINX Deployment
 resource "azurerm_nginx_deployment" "main" {
   depends_on = [
-    data.azurerm_resource_provider.nginx.registration_state == "Registered" ? null : time_sleep.wait_2_minutes[0],
+    null_resource.wait_for_provider,
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
     azurerm_subnet_network_security_group_association.main
