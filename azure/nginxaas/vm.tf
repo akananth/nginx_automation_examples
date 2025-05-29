@@ -27,7 +27,7 @@ resource "azurerm_network_interface" "vm_nic" {
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}"  # FIXED
+  name                = "${var.project_prefix}-vm${count.index + 1}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
@@ -36,9 +36,13 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     azurerm_network_interface.vm_nic[count.index].id
   ]
 
-  admin_ssh_key {
-    username   = "adminuser"
-    public_key = var.ssh_public_key
+  # Only add SSH key if it's not empty
+  dynamic "admin_ssh_key" {
+    for_each = length(trimspace(var.ssh_public_key)) > 0 ? [1] : []
+    content {
+      username   = "adminuser"
+      public_key = var.ssh_public_key
+    }
   }
 
   os_disk {
