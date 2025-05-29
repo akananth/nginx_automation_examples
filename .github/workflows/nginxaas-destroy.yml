@@ -38,6 +38,7 @@ jobs:
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -input=false
         env:
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}  # ADD THIS
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
           TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
           TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
