@@ -114,6 +114,10 @@ variable "ssh_public_key" {
   type        = string
   description = "SSH public key for VM access"
   sensitive   = true
+  validation {
+    condition     = length(trimspace(var.ssh_public_key)) > 0
+    error_message = "SSH public key must not be empty"
+  }
 }
 
 variable "nginx_plus_cert" {
