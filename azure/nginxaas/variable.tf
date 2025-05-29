@@ -6,14 +6,24 @@ variable "project_prefix" {
     error_message = "Project prefix must be 12 characters or less."
   }
 }
+# Add this to variables.tf
+variable "subscription_id" {
+  type        = string
+  description = "Azure Subscription ID"
+}
 
 variable "azure_region" {
   type        = string
   description = "Azure deployment region"
   default     = "eastus2"
   validation {
-    condition     = contains(["eastus2", "westeurope", "southeastasia"], lower(var.azure_region))
-    error_message = "Valid regions: eastus2, westeurope, southeastasia."
+    condition     = contains([
+      "eastus", "eastus2", "westus", "westus2", 
+      "centralus", "northcentralus", "southcentralus",
+      "westeurope", "northeurope", "uksouth", "ukwest",
+      "southeastasia", "eastasia", "australiaeast", "australiasoutheast"
+    ], lower(var.azure_region))
+    error_message = "Valid regions: eastus, eastus2, westus, westus2, centralus, northcentralus, southcentralus, westeurope, northeurope, uksouth, ukwest, southeastasia, eastasia, australiaeast, australiasoutheast."
   }
 }
 
