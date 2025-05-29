@@ -22,6 +22,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set Azure Subscription
+        run: az account set --subscription ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -31,35 +34,55 @@ jobs:
         run: terraform init
         env:
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
-          TF_VAR_container_name: ${{ vars.storage_account_name }}-container
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -input=false
         env:
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region }}
-          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
-          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
-          TF_VAR_nginx_plus_cert: ${{ secrets.TF_VAR_nginx_plus_cert }}
-          TF_VAR_nginx_plus_key: ${{ secrets.TF_VAR_nginx_plus_key }}
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
+          TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
+          TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
+          TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
-      - name: Verify Resource Cleanup
-        run: |
-          echo "Verifying resource cleanup..."
-          az group show --name ${{ vars.project_prefix }}-rg || echo "Resource group already removed"
-          
-          echo "Checking NGINXaaS deployments..."
-          az nginx deployment list --resource-group ${{ vars.project_prefix }}-rg \
-            --query "[].name" -o tsv | while read -r deployment; do
-            echo "Found remaining deployment: $deployment"
-            exit 1
-          done
-
-      - name: Cleanup Provider Registration
+      - name: Force Delete Resource Group
         if: always()
         run: |
-          echo "Unregistering NGINX provider..."
-          az provider unregister --namespace NGINX.NGINXPLUS --yes
-          echo "Re-registering NGINX provider..."
-          az provider register --namespace NGINX.NGINXPLUS
+          az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait || true
+          echo "Resource group deletion initiated"
+
+      - name: Unregister NGINX Provider
+        if: always()
+        run: |
+          # Check if provider is registered
+          if az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Registered"; then
+            echo "Unregistering NGINX provider..."
+            az provider unregister --namespace NGINX.NGINXPLUS --yes
+            
+            # Wait for unregistration to complete
+            while az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Unregistering"; do
+              sleep 10
+              echo "Waiting for provider unregistration..."
+            done
+            echo "NGINX provider unregistered"
+          else
+            echo "NGINX provider not registered"
+          fi
+
+      - name: Verify Cleanup
+        run: |
+          echo "Verifying resource cleanup..."
+          
+          # Check resource group
+          if az group exists --name ${{ vars.project_prefix }}-rg; then
+            echo "::error::Resource group still exists!"
+            exit 1
+          fi
+          
+          # Check NGINX provider registration
+          if az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Registered"; then
+            echo "::error::NGINX provider still registered!"
+            exit 1
+          fi
+          
+          echo "All resources cleaned up successfully"
