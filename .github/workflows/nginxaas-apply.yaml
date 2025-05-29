@@ -1,4 +1,4 @@
-name: 'Terraform Apply'
+name: 'NGINXaaS WAF Apply'
 
 on:
   push:
@@ -38,8 +38,9 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}  # ADD THIS
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region }}
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
           TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
@@ -49,8 +50,9 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
         env:
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}  # ADD THIS
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region }}
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
           TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
 
