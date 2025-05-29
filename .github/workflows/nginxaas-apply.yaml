@@ -47,6 +47,14 @@ jobs:
           TF_VAR_nginx_plus_cert: ${{ secrets.TF_VAR_nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.TF_VAR_nginx_plus_key }}
 
+      - name: Verify SSH Key
+        run: |
+         if [ -z "${{ secrets.TF_VAR_ssh_public_key }}" ]; then
+           echo "::error::SSH public key is empty!"
+           exit 1
+         else
+          echo "SSH key is set (first 10 chars: ${${{ secrets.TF_VAR_ssh_public_key }}:0:10})"
+         fi
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
         env:
