@@ -1,7 +1,7 @@
 # Create public IPs for VMs
 resource "azurerm_public_ip" "vm_pip" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}-pip"  # FIXED
+  name                = "${var.project_prefix}-vm${count.index + 1}-pip"  # CHANGED
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   allocation_method   = "Static"
@@ -12,7 +12,7 @@ resource "azurerm_public_ip" "vm_pip" {
 # Create network interfaces for VMs
 resource "azurerm_network_interface" "vm_nic" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}-nic"  # FIXED
+  name                = "${var.project_prefix}-vm${count.index + 1}-nic"  # CHANGED
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -27,7 +27,7 @@ resource "azurerm_network_interface" "vm_nic" {
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}"
+  name                = "${var.project_prefix}-vm${count.index + 1}"  # CHANGED
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
@@ -36,11 +36,11 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     azurerm_network_interface.vm_nic[count.index].id
   ]
 
-  # Only add SSH key if it's not empty
   admin_ssh_key {
     username   = "adminuser"
-    public_key = var.ssh_public_key  # Changed
+    public_key = var.ssh_public_key
   }
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -54,7 +54,8 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
   }
 
   custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
-    nginx_cert = base64encode(var.nginx_plus_cert)  # Changed
-    nginx_key  = base64encode(var.nginx_plus_key)   # Changed
+    nginx_cert = base64encode(var.nginx_plus_cert)
+    nginx_key  = base64encode(var.nginx_plus_key)
+    nginx_jwt  = var.nginx_jwt
   }))
 }
