@@ -9,6 +9,20 @@ packages:
   - wget
 
 write_files:
+  # NGINX Plus certificate and key
+  - path: /etc/ssl/nginx/nginx-repo.crt
+    encoding: b64
+    content: ${nginx_cert}
+    permissions: '0644'
+  - path: /etc/ssl/nginx/nginx-repo.key
+    encoding: b64
+    content: ${nginx_key}
+    permissions: '0600'
+  # JWT license file
+  - path: /etc/nginx/license.jwt
+    content: ${nginx_jwt}
+    permissions: '0600'
+  # NGINX Plus repo config
   - path: /etc/apt/auth.conf.d/nginx.conf
     content: |
       machine pkgs.nginx.com
@@ -17,6 +31,9 @@ write_files:
     permissions: '0600'
 
 runcmd:
+  # Create required directories
+  - sudo mkdir -p /etc/ssl/nginx
+  
   # Add NGINX signing key
   - wget -qO - https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
   
@@ -27,15 +44,14 @@ runcmd:
   - sudo apt update
   - sudo apt install -y nginx-plus
   
-  # Copy JWT license
-  - sudo mkdir -p /etc/nginx/ssl
-  - echo '${nginx_jwt}' | sudo tee /etc/nginx/ssl/license.jwt > /dev/null
-  - sudo chmod 600 /etc/nginx/ssl/license.jwt
+  # Verify installation
+  - sudo nginx -v
   
-  # Configure NGINX (basic HTTP config)
+  # Basic NGINX configuration
   - sudo tee /etc/nginx/conf.d/default.conf <<EOF
     server {
         listen 80;
+        server_name _;
         location / {
             root /usr/share/nginx/html;
             index index.html;
