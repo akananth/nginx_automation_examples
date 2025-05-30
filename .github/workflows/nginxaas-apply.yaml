@@ -6,7 +6,7 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform Apply'
+    name: 'NGINXaaS WAF'
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Updated to v3
 
       - name: Azure Login
         uses: azure/login@v1
@@ -23,10 +23,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2  # Updated to v2
         with:
           terraform_version: 1.3.0
-      
       
       - name: Terraform Init
         run: terraform init
@@ -39,36 +38,31 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
-          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}  # ADD THIS
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
-          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
+          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
         env:
-          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}  # ADD THIS
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
-          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
+          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-          TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
-    
 
       - name: Output Deployment Results
         id: outputs
         run: |
-          echo "NGINX_ENDPOINT=$(terraform output 
-          -raw nginx_endpoint)" >> $GITHUB_OUTPUT
-          echo "VM_PUBLIC_IPS=$(terraform output -json vm_public_ips | jq -c)" >> $GITHUB_OUTPUT
-          echo "NGINX Endpoint: $(terraform output -raw nginx_endpoint)"
-          echo "VM Public IPs: $(terraform output -json vm_public_ips)"
+          NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint)
+          VM_PUBLIC_IPS=$(terraform output -json vm_public_ips | jq -c)
+          echo "NGINX_ENDPOINT=$NGINX_ENDPOINT" >> $GITHUB_OUTPUT
+          echo "VM_PUBLIC_IPS=$VM_PUBLIC_IPS" >> $GITHUB_OUTPUT
+          echo "NGINX Endpoint: $NGINX_ENDPOINT"
+          echo "VM Public IPs: $VM_PUBLIC_IPS"
