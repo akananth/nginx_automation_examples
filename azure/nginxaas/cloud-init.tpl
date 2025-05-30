@@ -18,10 +18,6 @@ write_files:
     encoding: b64
     content: ${nginx_key}
     permissions: '0600'
-  # JWT license file
-  - path: /etc/nginx/license.jwt
-    content: ${nginx_jwt}
-    permissions: '0600'
   # NGINX Plus repo config
   - path: /etc/apt/auth.conf.d/nginx.conf
     content: |
@@ -31,33 +27,44 @@ write_files:
     permissions: '0600'
 
 runcmd:
-  # Create required directories
+  # Create required directory for certificates
   - sudo mkdir -p /etc/ssl/nginx
+  - sudo chmod 755 /etc/ssl/nginx
   
   # Add NGINX signing key
   - wget -qO - https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
   
   # Add NGINX Plus repository
-  - echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
+  - echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu $(lsb_release -cs) nginx-plus" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
   
-  # Install NGINX Plus
+  # Install prerequisites
+  - sudo apt update
+  - sudo apt install -y debian-archive-keyring
+  - curl -fsSL https://pkgs.nginx.com/keys/nginx_signing.key | sudo gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
+  
+  # Update and install NGINX Plus
   - sudo apt update
   - sudo apt install -y nginx-plus
   
   # Verify installation
   - sudo nginx -v
+  - sudo systemctl status nginx
+  
+  # Create license.jwt AFTER installation
+  - echo '${nginx_jwt}' | sudo tee /etc/nginx/license.jwt
   
   # Basic NGINX configuration
-  - sudo tee /etc/nginx/conf.d/default.conf <<EOF
-    server {
-        listen 80;
-        server_name _;
-        location / {
-            root /usr/share/nginx/html;
-            index index.html;
-        }
+  - sudo tee /etc/nginx/conf.d/default.conf <<'EOF'
+server {
+    listen 80;
+    server_name _;
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
     }
-    EOF
+}
+EOF
   
-  # Restart NGINX
+  # Restart NGINX to apply license
   - sudo systemctl restart nginx
+  - sudo systemctl enable nginx
