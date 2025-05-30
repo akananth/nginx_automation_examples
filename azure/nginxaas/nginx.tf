@@ -21,7 +21,7 @@ resource "azurerm_nginx_configuration" "main" {
             server {
                 listen 80 default_server;
                 app_protect_enable on;
-                app_protect_policy_file /etc/app_protect/conf/NginxDefaultPolicy.json; # Reference default path
+                app_protect_policy_file /etc/app_protect/conf/NginxStrictPolicy.json; # Reference default path
                 server_name localhost;
                 location / {
                     return 200 'Hello World';

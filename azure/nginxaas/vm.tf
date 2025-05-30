@@ -1,5 +1,3 @@
-# Add to main.tf after NGINX deployment resource
-
 # Create public IPs for VMs
 resource "azurerm_public_ip" "vm_pip" {
   count               = 2
@@ -29,7 +27,7 @@ resource "azurerm_network_interface" "vm_nic" {
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
-  name                = "${var.name_prefix}-vm${count.index + 1}"
+  name                = "${var.project_prefix}-vm${count.index + 1}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
@@ -55,9 +53,9 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(templatefile("${path.module}/cloud-init.yaml", {
+  custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
     nginx_cert = base64encode(var.nginx_plus_cert)
     nginx_key  = base64encode(var.nginx_plus_key)
-    nginx_jwt = var.nginx_jwt
+    nginx_jwt  = var.nginx_jwt
   }))
 }
