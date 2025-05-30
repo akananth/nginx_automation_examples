@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Azure Login
         uses: azure/login@v1
@@ -26,7 +26,7 @@ jobs:
         run: az account set --subscription ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.3.0
 
@@ -46,16 +46,18 @@ jobs:
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          TF_VAR_nginx_jwt: ${{ secrets.nginx_jwt }}
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
+      
       - name: Force Delete Resource Group
-        if: always()
+        if: failure()  # Only run if destroy fails
         run: |
-          az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait || true
+          az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
           echo "Resource group deletion initiated"
 
       - name: Unregister NGINX Provider
-        if: always()
+        if: failure()  # Only run if destroy fails
         run: |
           # Check if provider is registered
           if az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Registered"; then
