@@ -1,7 +1,7 @@
 # Create public IPs for VMs
 resource "azurerm_public_ip" "vm_pip" {
   count               = 2
-  name                = "${var.name_prefix}-vm${count.index + 1}-pip"
+  name                = "${var.project_prefix}-vm${count.index + 1}-pip"  # CHANGED
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   allocation_method   = "Static"
@@ -12,7 +12,7 @@ resource "azurerm_public_ip" "vm_pip" {
 # Create network interfaces for VMs
 resource "azurerm_network_interface" "vm_nic" {
   count               = 2
-  name                = "${var.name_prefix}-vm${count.index + 1}-nic"
+  name                = "${var.project_prefix}-vm${count.index + 1}-nic"  # CHANGED
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -27,7 +27,7 @@ resource "azurerm_network_interface" "vm_nic" {
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}"
+  name                = "${var.project_prefix}-vm${count.index + 1}"  # CHANGED
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
