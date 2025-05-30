@@ -22,9 +22,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set Azure Subscription
-        run: az account set --subscription ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -49,46 +46,86 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.nginx_jwt }}
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
-      
       - name: Force Delete Resource Group
-        if: failure()  # Only run if destroy fails
+        if: failure()
         run: |
-          az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
-          echo "Resource group deletion initiated"
+          echo "Force deleting resource group..."
+          az group delete --name ${{ vars.project_prefix }}-rg --yes
+          
+          # Wait for deletion to complete
+          echo "Waiting for resource group deletion..."
+          for i in {1..30}; do
+            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
+              echo "Resource group deleted successfully"
+              exit 0
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 30
+          done
+          
+          echo "::error::Resource group still exists after 15 minutes!"
+          exit 1
 
       - name: Unregister NGINX Provider
-        if: failure()  # Only run if destroy fails
+        if: failure()
         run: |
-          # Check if provider is registered
-          if az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Registered"; then
-            echo "Unregistering NGINX provider..."
+          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+          
+          if [[ "$state" == "Registered" || "$state" == "Registering" || "$state" == "Unregistering" ]]; then
+            echo "Unregistering NGINX provider (current state: $state)..."
             az provider unregister --namespace NGINX.NGINXPLUS
             
             # Wait for unregistration to complete
-            while az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv | grep -q "Unregistering"; do
-              sleep 10
-              echo "Waiting for provider unregistration..."
+            for i in {1..10}; do
+              current_state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+              if [[ "$current_state" == "NotRegistered" ]]; then
+                echo "Provider unregistered successfully"
+                exit 0
+              fi
+              echo "Current state: $current_state. Waiting... ($i/10)"
+              sleep 30
             done
-            echo "NGINX provider unregistered"
+            echo "::error::Provider still unregistering after 5 minutes!"
+            exit 1
           else
-            echo "NGINX provider not registered"
+            echo "NGINX provider state: $state - no action needed"
           fi
 
       - name: Verify Cleanup
         run: |
           echo "Verifying resource cleanup..."
           
-          # Check resource group
-          if az group exists --name ${{ vars.project_prefix }}-rg; then
-            echo "::error::Resource group still exists!"
-            exit 1
-          fi
+          # Check resource group with retries
+          for i in {1..30}; do
+            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
+              echo "Resource group deleted successfully"
+              break
+            fi
+            echo "Resource group still exists. Retry $i/30 (waiting 30 seconds)..."
+            sleep 30
+            
+            if [ $i -eq 30 ]; then
+              echo "::error::Resource group still exists after 15 minutes!"
+              exit 1
+            fi
+          done
           
           # Check NGINX provider registration
-          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
-          if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
-            echo "::error::NGINX provider still registered or unregistering!"
-            exit 1
-          fi
+          for i in {1..10}; do
+            state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+            
+            if [[ "$state" == "NotRegistered" || "$state" == "Not Found" ]]; then
+              echo "NGINX provider unregistered"
+              break
+            fi
+            
+            echo "NGINX provider state: $state. Retry $i/10 (waiting 30 seconds)..."
+            sleep 30
+            
+            if [ $i -eq 10 ]; then
+              echo "::error::NGINX provider still registered after 5 minutes!"
+              exit 1
+            fi
+          done
           
           echo "All resources cleaned up successfully"
