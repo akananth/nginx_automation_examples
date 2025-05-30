@@ -47,6 +47,7 @@ jobs:
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
@@ -60,12 +61,14 @@ jobs:
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
     
 
       - name: Output Deployment Results
         id: outputs
         run: |
-          echo "NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint)" >> $GITHUB_OUTPUT
+          echo "NGINX_ENDPOINT=$(terraform output 
+          -raw nginx_endpoint)" >> $GITHUB_OUTPUT
           echo "VM_PUBLIC_IPS=$(terraform output -json vm_public_ips | jq -c)" >> $GITHUB_OUTPUT
           echo "NGINX Endpoint: $(terraform output -raw nginx_endpoint)"
           echo "VM Public IPs: $(terraform output -json vm_public_ips)"
