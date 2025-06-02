@@ -48,35 +48,48 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.nginx_jwt }}
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
-      - name: Force Delete Resource Group
+      - name: Delete Resource Group and Wait
         if: always()
         run: |
           echo "Initiating resource group deletion..."
           az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
-          echo "Deletion triggered."
+
+          echo "Waiting for resource group to be deleted..."
+          for i in {1..6}; do
+            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
+              echo "Resource group deleted."
+              break
+            fi
+            echo "Still exists... ($i/6). Waiting 20 seconds."
+            sleep 20
+          done
+
+          if az group exists --name ${{ vars.project_prefix }}-rg; then
+            echo "::error::Resource group still exists after wait."
+            exit 1
+          fi
 
       - name: Unregister NGINX Provider
         if: always()
         run: |
-          echo "Attempting to unregister NGINX provider..."
-          az provider unregister --namespace NGINX.NGINXPLUS --wait || true
-          echo "Unregistration command issued."
-
-      - name: Verify Cleanup
-        run: |
-          echo "Verifying resource group cleanup..."
-          if ! az group exists --name ${{ vars.project_prefix }}-rg; then
-            echo "Resource group successfully deleted."
-          else
-            echo "::error::Resource group still exists!"
-            exit 1
-          fi
-
-          echo "Verifying NGINX provider is unregistered..."
+          echo "Checking NGINX provider registration state..."
           state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+
+          if [[ "$state" == "Registered" ]]; then
+            echo "Unregistering NGINX provider now that all resources are gone..."
+            az provider unregister --namespace NGINX.NGINXPLUS --wait || true
+          else
+            echo "NGINX provider already unregistered or not found. Skipping."
+          fi
+
+      - name: Final Verification
+        run: |
+          echo "Verifying final cleanup..."
+          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+
           if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
-            echo "::error::NGINX provider still registered or unregistering!"
+            echo "::error::NGINX provider is still registered or unregistering."
             exit 1
           fi
 
-          echo "All resources cleaned up successfully."
+          echo "✅ Cleanup verified. NGINX provider is unregistered."
