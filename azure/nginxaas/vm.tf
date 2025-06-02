@@ -30,8 +30,8 @@ data "template_file" "cloud_init" {
 
   vars = {
     nginx_cert = base64encode(file(var.nginx_plus_cert))  # path to nginx-repo.crt
-    nginx_key  = base64encode(file(var.ngnginx_plus_key))  # path to nginx-repo.key
-    nginx_jwt  = file(var.nginx_jwt_path)                     # path to license.jwt
+    nginx_key  = base64encode(file(var.nginx_plus_key))  # path to nginx-repo.key
+    nginx_jwt  = file(var.nginx_jwt)                     # path to license.jwt
   }
 }
 
