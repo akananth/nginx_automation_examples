@@ -51,62 +51,32 @@ jobs:
       - name: Force Delete Resource Group
         if: always()
         run: |
-          echo "Force deleting resource group..."
+          echo "Initiating resource group deletion..."
           az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
-          echo "Resource group deletion initiated"
+          echo "Deletion triggered."
 
       - name: Unregister NGINX Provider
         if: always()
         run: |
-          echo "Checking NGINX provider state..."
-          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
-          echo "Current state: $state"
-          
-          if [[ "$state" == "Registered" || "$state" == "Registering" || "$state" == "Unregistering" ]]; then
-            echo "Unregistering NGINX provider..."
-            az provider unregister --namespace NGINX.NGINXPLUS --wait
-            
-            # Wait for unregistration to complete
-            for i in {1..10}; do
-              current_state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
-              echo "Current state: $current_state"
-              
-              if [[ "$current_state" == "NotRegistered" ]]; then
-                echo "NGINX provider unregistered successfully"
-                break
-              fi
-              
-              echo "Waiting... ($i/10)"
-              sleep 30
-            done
-          else
-            echo "NGINX provider state: $state - no action needed"
-          fi
+          echo "Attempting to unregister NGINX provider..."
+          az provider unregister --namespace NGINX.NGINXPLUS --wait || true
+          echo "Unregistration command issued."
 
       - name: Verify Cleanup
         run: |
-          echo "Verifying resource cleanup..."
-          
+          echo "Verifying resource group cleanup..."
           if ! az group exists --name ${{ vars.project_prefix }}-rg; then
-            echo "Resource group deleted successfully"
+            echo "Resource group successfully deleted."
           else
-            echo "Resource group still exists, waiting 30 seconds before final check..."
-            sleep 30
-            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
-              echo "Resource group deleted successfully after wait"
-            else
-              echo "::error::Resource group still exists after waiting 30 seconds!"
-              exit 1
-            fi
+            echo "::error::Resource group still exists!"
+            exit 1
           fi
-          
-          # Check NGINX provider registration once
+
+          echo "Verifying NGINX provider is unregistered..."
           state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
           if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
             echo "::error::NGINX provider still registered or unregistering!"
             exit 1
-          else
-            echo "NGINX provider state: $state"
           fi
-          
-          echo "All resources cleaned up successfully"
+
+          echo "All resources cleaned up successfully."
