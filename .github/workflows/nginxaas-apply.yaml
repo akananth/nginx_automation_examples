@@ -41,6 +41,7 @@ jobs:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
           TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
@@ -54,6 +55,7 @@ jobs:
           TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
