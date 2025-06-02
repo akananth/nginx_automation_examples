@@ -64,17 +64,17 @@ variable "ssh_public_key" {
 }
 
 # File paths for cloud-init provisioning of NGINX Plus
-variable "nginx_repo_crt_path" {
+variable "nginx_plus_cert" {
   type        = string
   description = "Path to the NGINX Plus repository certificate (nginx-repo.crt)"
 }
 
-variable "nginx_repo_key_path" {
+variable "nginx_plus_key" {
   type        = string
   description = "Path to the NGINX Plus repository key (nginx-repo.key)"
 }
 
-variable "nginx_jwt_path" {
+variable "nginx_jwt" {
   type        = string
   description = "Path to the NGINX Plus JWT license file"
 }

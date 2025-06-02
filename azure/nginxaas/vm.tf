@@ -29,8 +29,8 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/cloud-init.tpl")
 
   vars = {
-    nginx_cert = base64encode(file(var.nginx_repo_crt_path))  # path to nginx-repo.crt
-    nginx_key  = base64encode(file(var.nginx_repo_key_path))  # path to nginx-repo.key
+    nginx_cert = base64encode(file(var.nginx_plus_cert))  # path to nginx-repo.crt
+    nginx_key  = base64encode(file(var.ngnginx_plus_key))  # path to nginx-repo.key
     nginx_jwt  = file(var.nginx_jwt_path)                     # path to license.jwt
   }
 }
