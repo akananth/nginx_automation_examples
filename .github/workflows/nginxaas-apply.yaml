@@ -2,7 +2,8 @@ name: 'NGINXaaS WAF Apply'
 
 on:
   push:
-    branches: nginxaas-apply
+    branches:
+      - nginxaas-apply
 
 jobs:
   terraform:
@@ -15,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to v3
+        uses: actions/checkout@v3
 
       - name: Azure Login
         uses: azure/login@v1
@@ -23,10 +24,10 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2  # Updated to v2
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.3.0
-      
+
       - name: Terraform Init
         run: terraform init
         env:
@@ -35,12 +36,22 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Set Azure Region with Fallback
+        id: set-region
+        run: |
+          if [ -z "${{ vars.azure_region }}" ]; then
+            echo "region=eastus2" >> $GITHUB_OUTPUT
+          else
+            echo "region=${{ vars.azure_region }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+          TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
+          TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
@@ -51,8 +62,9 @@ jobs:
         run: terraform apply -input=false -auto-approve
         env:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+          TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
+          TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
@@ -62,8 +74,8 @@ jobs:
       - name: Output Deployment Results
         id: outputs
         run: |
-          NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint)
-          VM_PUBLIC_IPS=$(terraform output -json vm_public_ips | jq -c)
+          NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint || echo "N/A")
+          VM_PUBLIC_IPS=$(terraform output -json vm_public_ips | jq -c . || echo "[]")
           echo "NGINX_ENDPOINT=$NGINX_ENDPOINT" >> $GITHUB_OUTPUT
           echo "VM_PUBLIC_IPS=$VM_PUBLIC_IPS" >> $GITHUB_OUTPUT
           echo "NGINX Endpoint: $NGINX_ENDPOINT"
