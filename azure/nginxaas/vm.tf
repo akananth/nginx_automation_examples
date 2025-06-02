@@ -29,8 +29,8 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/cloud-init.tpl")
 
   vars = {
-    nginx_cert = base64encode(var.nginx_plus_cert)  # Use var content directly
-    nginx_key  = base64encode(var.nginx_plus_key)   # Use var content directly
+    nginx_cert = var.nginx_plus_cert  # RAW PEM content here, no base64encode()
+    nginx_key  = var.nginx_plus_key   # RAW PEM content
     nginx_jwt  = var.nginx_jwt
   }
 }
@@ -65,7 +65,7 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  # Inject the rendered and encoded cloud-init template
+  # Inject cloud-init config rendered and base64 encoded
   custom_data = base64encode(data.template_file.cloud_init.rendered)
 
   tags = var.tags
