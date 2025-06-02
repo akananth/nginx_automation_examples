@@ -2,7 +2,8 @@ name: 'Terraform Destroy'
 
 on:
   push:
-    branches: nginxaas-destroy
+    branches: 
+      - nginxaas-destroy
 
 jobs:
   terraform:
@@ -35,9 +36,9 @@ jobs:
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -input=false
         env:
-          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}  # ADD THIS
+          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}  # FIXED REGION
+          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
           TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
@@ -47,14 +48,14 @@ jobs:
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
       - name: Force Delete Resource Group
-        if: always()  # Changed to always run
+        if: always()
         run: |
           echo "Force deleting resource group..."
           az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
           echo "Resource group deletion initiated"
 
       - name: Unregister NGINX Provider
-        if: always()  # Changed to always run
+        if: always()
         run: |
           echo "Checking NGINX provider state..."
           state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
@@ -85,22 +86,20 @@ jobs:
         run: |
           echo "Verifying resource cleanup..."
           
-          # Check resource group with retries
-          for i in {1..30}; do
-            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
-              echo "Resource group deleted successfully"
-              break
-            fi
-            echo "Resource group still exists. Retry $i/30 (waiting 30 seconds)..."
+          if ! az group exists --name ${{ vars.project_prefix }}-rg; then
+            echo "Resource group deleted successfully"
+          else
+            echo "Resource group still exists, waiting 30 seconds before final check..."
             sleep 30
-            
-            if [ $i -eq 30 ]; then
-              echo "::error::Resource group still exists after 15 minutes!"
+            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
+              echo "Resource group deleted successfully after wait"
+            else
+              echo "::error::Resource group still exists after waiting 30 seconds!"
               exit 1
             fi
-          done
+          fi
           
-          # Check NGINX provider registration
+          # Check NGINX provider registration once
           state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
           if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
             echo "::error::NGINX provider still registered or unregistering!"

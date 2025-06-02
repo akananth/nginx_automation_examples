@@ -21,13 +21,6 @@ provider "azurerm" {
   subscription_id = var.subscription_id
 }
 
-# Get current public IP if not provided
-data "http" "myip" {
-  url = "https://ifconfig.me/ip"
-  request_headers = {
-    Accept = "text/plain"
-  }
-}
 
 locals {
   resource_group_name = var.resource_group_name != "" ? var.resource_group_name : "${var.project_prefix}-rg"
