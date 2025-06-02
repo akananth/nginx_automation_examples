@@ -1,7 +1,7 @@
 # Create public IPs for VMs
 resource "azurerm_public_ip" "vm_pip" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}-pip"  # CHANGED
+  name                = "${var.project_prefix}-vm${count.index + 1}-pip"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   allocation_method   = "Static"
@@ -12,7 +12,7 @@ resource "azurerm_public_ip" "vm_pip" {
 # Create network interfaces for VMs
 resource "azurerm_network_interface" "vm_nic" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}-nic"  # CHANGED
+  name                = "${var.project_prefix}-vm${count.index + 1}-nic"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -24,14 +24,26 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
+# Cloud-init template for NGINX Plus provisioning
+data "template_file" "cloud_init" {
+  template = file("${path.module}/cloud-init.tpl")
+
+  vars = {
+    nginx_cert = var.nginx_plus_cert  # RAW PEM content here, no base64encode()
+    nginx_key  = var.nginx_plus_key   # RAW PEM content
+    nginx_jwt  = var.nginx_jwt
+  }
+}
+
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
-  name                = "${var.project_prefix}-vm${count.index + 1}"  # CHANGED
+  name                = "${var.project_prefix}-vm${count.index + 1}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
   admin_username      = "adminuser"
+
   network_interface_ids = [
     azurerm_network_interface.vm_nic[count.index].id
   ]
@@ -53,9 +65,8 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
-    nginx_cert = base64encode(var.nginx_plus_cert)
-    nginx_key  = base64encode(var.nginx_plus_key)
-    nginx_jwt  = var.nginx_jwt
-  }))
+  # Inject cloud-init config rendered and base64 encoded
+  custom_data = base64encode(data.template_file.cloud_init.rendered)
+
+  tags = var.tags
 }
