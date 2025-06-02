@@ -63,37 +63,36 @@ variable "ssh_public_key" {
   sensitive   = true
 }
 
-variable "nginx_jwt" {
-  description = "NGINX Plus JWT license"
+# File paths for cloud-init provisioning of NGINX Plus
+variable "nginx_repo_crt_path" {
   type        = string
-  sensitive   = true
+  description = "Path to the NGINX Plus repository certificate (nginx-repo.crt)"
 }
 
-variable "nginx_plus_cert" {
+variable "nginx_repo_key_path" {
   type        = string
-  description = "Base64 encoded NGINX Plus certificate"
-  sensitive   = true
+  description = "Path to the NGINX Plus repository key (nginx-repo.key)"
 }
 
-variable "nginx_plus_key" {
+variable "nginx_jwt_path" {
   type        = string
-  description = "Base64 encoded NGINX Plus private key"
-  sensitive   = true
+  description = "Path to the NGINX Plus JWT license file"
 }
 
+# Optional storage backend settings for remote state
 variable "storage_account_name" {
   type        = string
-  description = "Storage account for Terraform state"
+  description = "Azure storage account name for Terraform state"
 }
 
 variable "container_name" {
   type        = string
-  description = "Storage container name"
+  description = "Azure storage container name for Terraform state"
   default     = "terraform-state"
 }
 
-variable "allowed_ip" {
+variable "admin_ip" {
   type        = string
-  description = "Your current public IP for security rules"
+  description = "Current admin IP for SSH access (IPv4 without /32 suffix)"
   default     = ""
 }
