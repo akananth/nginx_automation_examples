@@ -14,16 +14,22 @@ write_files:
     encoding: b64
     content: ${nginx_cert}
     permissions: '0644'
+
   - path: /tmp/nginx-repo.key
     encoding: b64
     content: ${nginx_key}
     permissions: '0600'
+
   - path: /etc/apt/auth.conf.d/nginx.conf
     content: |
       machine pkgs.nginx.com
       login token
       password ${nginx_jwt}
     permissions: '0600'
+
+  - path: /etc/nginx/license.jwt
+    content: ${nginx_jwt}
+    permissions: '0644'
 
 runcmd:
   # Create SSL directory & move certs there
@@ -44,9 +50,6 @@ runcmd:
   # Verify installation and enable service
   - nginx -v
   - systemctl status nginx
-
-  # Write license.jwt file
-  - echo '${nginx_jwt}' | tee /etc/nginx/license.jwt
 
   # Basic default server config
   - |
