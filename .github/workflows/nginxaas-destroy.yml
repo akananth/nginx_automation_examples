@@ -96,7 +96,7 @@ jobs:
           echo "Verifying resource cleanup..."
           
           # Check resource group with retries
-          for i in {1..30}; do
+          for i in {1..4}; do
             if ! az group exists --name ${{ vars.project_prefix }}-rg; then
               echo "Resource group deleted successfully"
               break
