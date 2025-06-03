@@ -7,7 +7,7 @@ on:
 
 jobs:
   terraform:
-    name: 'NGINXaaS WAF Destroy'
+    name: 'NGINXaaS-WAF Destroy'
     runs-on: ubuntu-latest
     environment: production
     defaults:
