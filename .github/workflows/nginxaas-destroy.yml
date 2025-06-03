@@ -55,8 +55,9 @@ jobs:
           az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
 
           echo "Waiting for resource group to be deleted..."
-          for i in {1..6}; do
-            if ! az group exists --name ${{ vars.project_prefix }}-rg; then
+          for i in {1..9}; do
+            exists=$(az group exists --name ${{ vars.project_prefix }}-rg)
+            if [[ "$exists" == "false" ]]; then
               echo "Resource group deleted."
               break
             fi
@@ -64,7 +65,8 @@ jobs:
             sleep 20
           done
 
-          if az group exists --name ${{ vars.project_prefix }}-rg; then
+          exists=$(az group exists --name ${{ vars.project_prefix }}-rg)
+          if [[ "$exists" == "true" ]]; then
             echo "::error::Resource group still exists after wait."
             exit 1
           fi
