@@ -60,7 +60,7 @@ jobs:
               echo "Resource group deleted."
               break
             fi
-            echo "Still exists... ($i/6). Waiting 20 seconds."
+            echo "Still exists... ($i/9). Waiting 20 seconds."
             sleep 20
           done
 
