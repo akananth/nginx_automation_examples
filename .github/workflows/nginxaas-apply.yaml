@@ -74,13 +74,11 @@ jobs:
       - name: Output Deployment Results
         id: outputs
         run: |
-          {
-            NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint 2>/dev/null) || NGINX_ENDPOINT="N/A"
-            VM_PUBLIC_IPS=$(terraform output -json vm_public_ips 2>/dev/null | jq -c .) || VM_PUBLIC_IPS="[]"
+         NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint 2>/dev/null || echo "N/A")
+         VM_PUBLIC_IPS=$(terraform output -json vm_public_ips 2>/dev/null | jq -c . || echo "[]")
 
-            echo "NGINX_ENDPOINT=${NGINX_ENDPOINT}"
-            echo "VM_PUBLIC_IPS=${VM_PUBLIC_IPS}"
+         echo "NGINX_ENDPOINT=${NGINX_ENDPOINT}"
+         echo "VM_PUBLIC_IPS=${VM_PUBLIC_IPS}"
 
-            echo "nginx_endpoint=${NGINX_ENDPOINT}" >> $GITHUB_OUTPUT
-            echo "vm_public_ips=${VM_PUBLIC_IPS}" >> $GITHUB_OUTPUT
-          }
+         echo "nginx_endpoint=${NGINX_ENDPOINT}" >> $GITHUB_OUTPUT
+         echo "vm_public_ips=${VM_PUBLIC_IPS}" >> $GITHUB_OUTPUT
