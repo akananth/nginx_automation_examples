@@ -1,4 +1,4 @@
-name: 'NGINXaaS WAF Destroy'
+name: 'NGINXaaS-WAF Destroy'
 
 on:
   push:
