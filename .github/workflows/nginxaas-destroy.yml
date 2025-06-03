@@ -48,27 +48,42 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.nginx_jwt }}
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
-      - name: Delete Resource Group and Wait
+      - name: Delete Resource Group Cleanly
         if: always()
         run: |
-          echo "Initiating resource group deletion..."
-          az group delete --name ${{ vars.project_prefix }}-rg --yes --no-wait
+          RG_NAME="${{ vars.project_prefix }}-rg"
 
-          echo "Waiting for resource group to be deleted..."
-          for i in {1..9}; do
-            exists=$(az group exists --name ${{ vars.project_prefix }}-rg)
-            if [[ "$exists" == "false" ]]; then
-              echo "Resource group deleted."
-              break
-            fi
-            echo "Still exists... ($i/9). Waiting 20 seconds."
-            sleep 20
-          done
+          echo "Checking if resource group $RG_NAME exists..."
+          exists=$(az group exists --name "$RG_NAME")
 
-          exists=$(az group exists --name ${{ vars.project_prefix }}-rg)
           if [[ "$exists" == "true" ]]; then
-            echo "::error::Resource group still exists after wait."
-            exit 1
+            echo "Checking if resource group is empty..."
+            resources=$(az resource list --resource-group "$RG_NAME" --query "[].name" -o tsv)
+
+            if [[ -z "$resources" ]]; then
+              echo "Resource group is empty. Deleting..."
+              az group delete --name "$RG_NAME" --yes --no-wait
+
+              echo "Waiting for resource group to be deleted..."
+              for i in {1..12}; do
+                sleep 10
+                exists=$(az group exists --name "$RG_NAME")
+                if [[ "$exists" == "false" ]]; then
+                  echo "✅ Resource group deleted."
+                  exit 0
+                fi
+                echo "Still exists... ($i/12)."
+              done
+
+              echo "::error::Resource group still exists after waiting."
+              exit 1
+            else
+              echo "::error::Resource group $RG_NAME is not empty. Resources still exist:"
+              echo "$resources"
+              exit 1
+            fi
+          else
+            echo "Resource group $RG_NAME already deleted."
           fi
 
       - name: Unregister NGINX Provider
