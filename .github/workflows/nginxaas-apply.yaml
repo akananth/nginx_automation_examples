@@ -71,15 +71,4 @@ jobs:
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
-      - name: Output Deployment Results
-        id: outputs
-        run: |
-         NGINX_ENDPOINT=$(terraform output -raw nginx_endpoint 2>/dev/null || echo "N/A")
-         VM_PUBLIC_IPS=$(terraform output -json vm_public_ips 2>/dev/null || echo "[]")
-
-         echo "NGINX_ENDPOINT=${NGINX_ENDPOINT}"
-         echo "VM_PUBLIC_IPS=${VM_PUBLIC_IPS}"
-
-         # Properly escape values for GITHUB_OUTPUT
-         echo "nginx_endpoint=${NGINX_ENDPOINT}" >> $GITHUB_OUTPUT
-         echo "vm_public_ips=$(echo "${VM_PUBLIC_IPS}" | jq -c .)" >> $GITHUB_OUTPUT
+     
