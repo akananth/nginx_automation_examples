@@ -25,7 +25,8 @@ write_files:
       machine pkgs.nginx.com
       login token
       password ${nginx_jwt}
-    permissions: '0600'
+      sslcert /etc/ssl/nginx/nginx-repo.crt
+      sslkey /etc/ssl/nginx/nginx-repo.key
 
   - path: /etc/nginx/license.jwt
     content: |
