@@ -29,9 +29,9 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/cloud-init.tpl")
 
   vars = {
-    nginx_cert = var.nginx_plus_cert  # RAW PEM content here, no base64encode()
-    nginx_key  = var.nginx_plus_key   # RAW PEM content
-    nginx_jwt  = var.nginx_jwt
+    nginx_cert = indent(6, var.nginx_plus_cert)
+    nginx_key  = indent(6, var.nginx_plus_key)
+    nginx_jwt  = indent(6, var.nginx_jwt)
   }
 }
 
