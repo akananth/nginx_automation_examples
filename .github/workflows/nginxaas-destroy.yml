@@ -2,12 +2,12 @@ name: 'NGINXaaS WAF Destroy'
 
 on:
   push:
-    branches: 
+    branches:
       - nginxaas-destroy
 
 jobs:
-  terraform:
-    name: 'NGINXaaS-WAF Destroy'
+  terraform-destroy:
+    name: 'Destroy NGINXaaS Resources'
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -15,7 +15,7 @@ jobs:
         working-directory: ./azure/nginxaas
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Azure Login
@@ -33,8 +33,10 @@ jobs:
         env:
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve -input=false
+      - name: Terraform Destroy (Best Effort)
+        run: |
+          echo "🔄 Running terraform destroy..."
+          terraform destroy -auto-approve -input=false || echo "::warning::Terraform destroy failed. Proceeding with cleanup."
         env:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
@@ -48,65 +50,68 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.nginx_jwt }}
           TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
-      - name: Delete Resource Group Cleanly
+      - name: Force Delete Resource Group If Needed
         if: always()
         run: |
           RG_NAME="${{ vars.project_prefix }}-rg"
 
-          echo "Checking if resource group $RG_NAME exists..."
-          exists=$(az group exists --name "$RG_NAME")
+          echo "🔍 Checking if resource group $RG_NAME exists..."
+          if az group exists --name "$RG_NAME" | grep -q true; then
+            echo "🔎 Listing remaining resources in $RG_NAME..."
+            RESOURCES=$(az resource list --resource-group "$RG_NAME" --query "[].name" -o tsv)
 
-          if [[ "$exists" == "true" ]]; then
-            echo "Checking if resource group is empty..."
-            resources=$(az resource list --resource-group "$RG_NAME" --query "[].name" -o tsv)
-
-            if [[ -z "$resources" ]]; then
-              echo "Resource group is empty. Deleting..."
+            if [[ -n "$RESOURCES" ]]; then
+              echo "::warning::Resource group $RG_NAME is not empty. Force deleting..."
+              echo "$RESOURCES"
               az group delete --name "$RG_NAME" --yes --no-wait
-
-              echo "Waiting for resource group to be deleted..."
-              for i in {1..12}; do
-                sleep 10
-                exists=$(az group exists --name "$RG_NAME")
-                if [[ "$exists" == "false" ]]; then
-                  echo "✅ Resource group deleted."
-                  exit 0
-                fi
-                echo "Still exists... ($i/12)."
-              done
-
-              echo "::error::Resource group still exists after waiting."
-              exit 1
             else
-              echo "::error::Resource group $RG_NAME is not empty. Resources still exist:"
-              echo "$resources"
-              exit 1
+              echo "✅ Resource group is already empty. Deleting group..."
+              az group delete --name "$RG_NAME" --yes --no-wait
             fi
           else
-            echo "Resource group $RG_NAME already deleted."
+            echo "✅ Resource group $RG_NAME does not exist. Nothing to delete."
           fi
 
-      - name: Unregister NGINX Provider
+      - name: Wait for Resource Group to be Deleted
         if: always()
         run: |
-          echo "Checking NGINX provider registration state..."
+          RG_NAME="${{ vars.project_prefix }}-rg"
+          echo "⏳ Waiting for resource group $RG_NAME to be deleted..."
+
+          for i in {1..18}; do
+            sleep 10
+            if ! az group exists --name "$RG_NAME" | grep -q true; then
+              echo "✅ Resource group $RG_NAME successfully deleted."
+              exit 0
+            fi
+            echo "⌛ Still deleting... ($i/18)"
+          done
+
+          echo "::error::Resource group $RG_NAME still exists after waiting."
+          exit 1
+
+      - name: Unregister NGINX Resource Provider
+        if: always()
+        run: |
+          echo "📦 Checking registration of NGINX.NGINXPLUS..."
           state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
 
           if [[ "$state" == "Registered" ]]; then
-            echo "Unregistering NGINX provider now that all resources are gone..."
+            echo "📤 Unregistering NGINX.NGINXPLUS..."
             az provider unregister --namespace NGINX.NGINXPLUS --wait || true
           else
-            echo "NGINX provider already unregistered or not found. Skipping."
+            echo "✅ NGINX provider already unregistered or not found."
           fi
 
-      - name: Final Verification
+      - name: Final Cleanup Verification
+        if: always()
         run: |
-          echo "Verifying final cleanup..."
+          echo "🔁 Verifying cleanup..."
           state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
 
           if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
-            echo "::error::NGINX provider is still registered or unregistering."
+            echo "::error::NGINX provider is still registered or in the process of unregistering."
             exit 1
           fi
 
-          echo "✅ Cleanup verified. NGINX provider is unregistered."
+          echo "✅ Final verification complete. All resources cleaned up."
