@@ -25,6 +25,11 @@ write_files:
     content: |
       ${nginx_jwt}
 
+  - path: /usr/share/nginx/html/${html_filename}
+    permissions: '0644'
+    content: |
+      ${html_content}
+
   - path: /etc/nginx/nginx.conf
     permissions: '0644'
     content: |
@@ -48,7 +53,6 @@ write_files:
           log_format main '$remote_addr - $remote_user [$time_local] "$request" '
                           '$status $body_bytes_sent "$http_referer" '
                           '"$http_user_agent" "$http_x_forwarded_for"';
-
           access_log /var/log/nginx/access.log main;
 
           server {
@@ -68,11 +72,6 @@ write_files:
               }
           }
       }
-
-  - path: /usr/share/nginx/html/${html_filename}
-    permissions: '0644'
-    content: |
-      ${html_content}
 
 runcmd:
   - mkdir -p /etc/ssl/nginx
