@@ -16,7 +16,7 @@ write_files:
       ${nginx_cert}
 
   - path: /etc/ssl/nginx/nginx-repo.key
-    permissions: '0600'
+    permissions: '0644'
     content: |
       ${nginx_key}
 
@@ -27,13 +27,15 @@ write_files:
 
 runcmd:
   - mkdir -p /etc/ssl/nginx
+  - apt update
+  - apt install apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
 
   # Add NGINX signing key
   - wget -qO - https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
 
-  # Configure nginx-plus repo
-  - echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg sslcert=/etc/ssl/nginx/nginx-repo.crt sslkey=/etc/ssl/nginx/nginx-repo.key] https://pkgs.nginx.com/plus/ubuntu $(lsb_release -cs) nginx-plus" | tee /etc/apt/sources.list.d/nginx-plus.list
-
+  # Configure nginx-plus repo/etc/apt/sources.list.d/nginx-plus.list
+  - echo "deb [signed-by=/etc/apt/keyrings/nginx.gpg] https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
+  
   # Download policy for nginx repo
   - wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
 
