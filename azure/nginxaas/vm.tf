@@ -24,14 +24,18 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
-# Cloud-init template for NGINX Plus provisioning
+# Cloud-init template for NGINX Plus provisioning with per-VM HTML file
 data "template_file" "cloud_init" {
+  count    = 2
   template = file("${path.module}/cloud-init.tpl")
 
   vars = {
     nginx_cert = indent(6, var.nginx_plus_cert)
     nginx_key  = indent(6, var.nginx_plus_key)
     nginx_jwt  = indent(6, var.nginx_jwt)
+
+    # Use coffee.html for VM 0 and tea.html for VM 1
+    html_file = count.index == 0 ? indent(6, file("${path.module}/coffee.html")) : indent(6, file("${path.module}/tea.html"))
   }
 }
 
@@ -65,8 +69,8 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  # Inject cloud-init config rendered and base64 encoded
-  custom_data = base64encode(data.template_file.cloud_init.rendered)
+  # Inject cloud-init config rendered and base64 encoded (per VM)
+  custom_data = base64encode(data.template_file.cloud_init[count.index].rendered)
 
   tags = var.tags
 }
