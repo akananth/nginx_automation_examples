@@ -7,7 +7,7 @@ on:
 
 jobs:
   terraform-destroy:
-    name: 'Destroy NGINXaaS Resources'
+    name: 'Destroy NGINXaaS WAF Resources'
     runs-on: ubuntu-latest
     environment: production
     defaults:
