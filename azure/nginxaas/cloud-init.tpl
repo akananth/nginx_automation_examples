@@ -31,7 +31,7 @@ runcmd:
   - apt install apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
 
   # Add NGINX signing key
-  - wget -qO - https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+  - wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
 
   # Configure nginx-plus repo/etc/apt/sources.list.d/nginx-plus.list
   - echo "deb [signed-by=/etc/apt/keyrings/nginx.gpg] https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
