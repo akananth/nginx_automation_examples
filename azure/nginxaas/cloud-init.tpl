@@ -8,21 +8,23 @@ packages:
   - gnupg
   - wget
   - curl
-  - ubuntu-keyring
 
 write_files:
   - path: /etc/ssl/nginx/nginx-repo.crt
     permissions: '0644'
     content: |
       ${nginx_cert}
+
   - path: /etc/ssl/nginx/nginx-repo.key
     permissions: '0644'
     content: |
       ${nginx_key}
-  - path: /usr/share/nginx/html/${html_filename}
+
+  - path: /etc/nginx/license.jwt
     permissions: '0644'
     content: |
-      ${html_content}
+      ${nginx_jwt}
+
 
 runcmd:
   # Install NGINX Plus repo and nginx-plus package
@@ -35,12 +37,10 @@ runcmd:
   - apt update
   - apt install -y nginx-plus
 
-  # Write license.jwt file AFTER installation
-  - |
-    cat <<EOF > /etc/nginx/license.jwt
-    ${nginx_jwt}
-    EOF
-  - chmod 644 /etc/nginx/license.jwt
+  - path: /usr/share/nginx/html/${html_filename}
+    permissions: '0644'
+    content: |
+      ${html_content}
 
   # Write nginx.conf AFTER installation
   - |
