@@ -29,12 +29,12 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/cloud-init.tpl")
 
   vars = {
-    nginx_cert       = indent(6, var.nginx_plus_cert)
-    nginx_key        = indent(6, var.nginx_plus_key)
-    nginx_jwt        = indent(6, var.nginx_jwt)
-    html_filename    = count.index == 0 ? "coffee.html" : "tea.html"
-    html_content_b64 = base64encode(count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html"))
-    server_ip        = azurerm_public_ip.vm_pip[count.index].ip_address
+    nginx_cert    = indent(6, var.nginx_plus_cert)
+    nginx_key     = indent(6, var.nginx_plus_key)
+    nginx_jwt     = indent(6, var.nginx_jwt)
+    html_filename = count.index == 0 ? "coffee.html" : "tea.html"
+    html_content  = count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html")
+    server_ip     = azurerm_public_ip.vm_pip[count.index].ip_address
   }
 }
 
