@@ -48,3 +48,8 @@ output "grafana_url" {
   description = "The public endpoint of the Grafana dashboard"
 }
 
+output "log_analytics_workspace_name" {
+  description = "Name of the Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.nginx_logging.name
+}
+

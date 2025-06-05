@@ -19,8 +19,8 @@ resource "azurerm_nginx_configuration" "main" {
       http {
           upstream app {
               zone app 64k;
-              server ${var.vm_public_ips[0]} weight=50 max_fails=3 fail_timeout=30s;
-              server ${var.vm_public_ips[1]} weight=50 max_fails=3 fail_timeout=30s;
+              server ${azurerm_public_ip.vm_pip[0].ip_address} weight=50 max_fails=3 fail_timeout=30s;
+              server ${azurerm_public_ip.vm_pip[1].ip_address} weight=50 max_fails=3 fail_timeout=30s;
           }
 
           app_protect_enforcer_address 127.0.0.1:50000;
