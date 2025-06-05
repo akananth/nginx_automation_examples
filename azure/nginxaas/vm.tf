@@ -25,18 +25,18 @@ resource "azurerm_network_interface" "vm_nic" {
 
 # Cloud-init template for NGINX Plus provisioning
 data "template_file" "cloud_init" {
+  count    = 2
   template = file("${path.module}/cloud-init.tpl")
+
   vars = {
-    nginx_cert       = indent(6, var.nginx_plus_cert) 
+    nginx_cert       = indent(6, var.nginx_plus_cert)
     nginx_key        = indent(6, var.nginx_plus_key)
     nginx_jwt        = indent(6, var.nginx_jwt)
     html_filename    = count.index == 0 ? "coffee.html" : "tea.html"
     html_content_b64 = base64encode(count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html"))
     server_ip        = azurerm_public_ip.vm_pip[count.index].ip_address
-
   }
 }
-
 
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
@@ -68,8 +68,8 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  # Inject cloud-init config rendered and base64 encoded
-  custom_data = base64encode(data.template_file.cloud_init.rendered)
+  # Reference the correct cloud-init output
+  custom_data = base64encode(data.template_file.cloud_init[count.index].rendered)
 
   tags = var.tags
-} 
+}
