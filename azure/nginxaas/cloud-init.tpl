@@ -1,4 +1,5 @@
 #cloud-config
+
 package_update: true
 package_upgrade: true
 packages:
@@ -8,6 +9,11 @@ packages:
   - gnupg
   - wget
   - curl
+
+bootcmd:
+  - mkdir -p /etc/ssl/nginx
+  - mkdir -p /etc/nginx
+  - mkdir -p /usr/share/nginx/html
 
 write_files:
   - path: /etc/ssl/nginx/nginx-repo.crt
@@ -30,10 +36,7 @@ write_files:
     content: |
       ${html_content}
 
-
 runcmd:
-  # Install NGINX Plus repo and nginx-plus package
-  - mkdir -p /etc/ssl/nginx
   - apt update
   - apt install -y apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
   - wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
@@ -42,7 +45,6 @@ runcmd:
   - apt update
   - apt install -y nginx-plus
 
-  # Write nginx.conf AFTER installation
   - |
     cat <<EOF > /etc/nginx/nginx.conf
     user nginx;
@@ -86,6 +88,5 @@ runcmd:
     }
     EOF
 
-  # Restart nginx to apply changes
   - systemctl enable nginx
   - systemctl restart nginx
