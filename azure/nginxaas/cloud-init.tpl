@@ -1,5 +1,4 @@
 #cloud-config
-
 package_update: true
 package_upgrade: true
 packages:
@@ -10,94 +9,40 @@ packages:
   - wget
   - curl
 
-bootcmd:
-  - mkdir -p /etc/ssl/nginx
-  - mkdir -p /etc/nginx
-  - mkdir -p /usr/share/nginx/html
-  - mkdir -p /opt/nginx-init
-
 write_files:
   - path: /etc/ssl/nginx/nginx-repo.crt
-    encoding: b64
     permissions: '0644'
     content: |
-      ${nginx_cert_b64}
+      ${nginx_cert}
 
   - path: /etc/ssl/nginx/nginx-repo.key
-    encoding: b64
     permissions: '0644'
     content: |
-      ${nginx_key_b64}
+      ${nginx_key}
 
   - path: /etc/nginx/license.jwt
     permissions: '0644'
     content: |
       ${nginx_jwt}
 
-  - path: /usr/share/nginx/html/${html_filename}
-    permissions: '0644'
-    content: |
-      ${html_content}
-
-  - path: /opt/nginx-init/install-nginx.sh
-    permissions: '0755'
-    content: |
-      #!/bin/bash
-      set -e
-
-      apt update
-      apt install -y apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
-      wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-      echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu $(lsb_release -cs) nginx-plus" > /etc/apt/sources.list.d/nginx-plus.list
-      wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
-
-      apt update
-      apt install -y nginx-plus
-
-      cat <<EOF > /etc/nginx/nginx.conf
-      user nginx;
-      worker_processes auto;
-      error_log /var/log/nginx/error.log notice;
-      pid /run/nginx.pid;
-      load_module modules/ngx_http_js_module.so;
-      load_module modules/ngx_stream_js_module.so;
-
-      events {
-          worker_connections 1024;
-      }
-
-      http {
-          include /etc/nginx/mime.types;
-          default_type application/octet-stream;
-          sendfile on;
-          keepalive_timeout 65;
-
-          log_format main '\$remote_addr - \$remote_user [\$time_local] "\$request" '
-                          '\$status \$body_bytes_sent "\$http_referer" '
-                          '"\$http_user_agent" "\$http_x_forwarded_for"';
-          access_log /var/log/nginx/access.log main;
-
-          server {
-              listen 80;
-              server_name ${server_ip};
-
-              location / {
-                  root /usr/share/nginx/html;
-                  index ${html_filename};
-              }
-
-              location /status {
-                  stub_status on;
-                  access_log off;
-                  allow 127.0.0.1;
-                  deny all;
-              }
-          }
-      }
-      EOF
-
-      systemctl enable nginx
-      systemctl restart nginx
-
 runcmd:
-  - bash /opt/nginx-init/install-nginx.sh
+  - mkdir -p /etc/ssl/nginx
+  - apt update
+  - apt install apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
+
+  # Add NGINX signing key
+  -  wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | sudo tee  /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+
+  # Configure nginx-plus repo/etc/apt/sources.list.d/nginx-plus.list
+  - printf "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu $(lsb_release -cs) nginx-plus\n" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
+
+  # Download policy for nginx repo
+  - wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
+
+  # Update and install nginx-plus
+  - apt update
+  - apt install -y nginx-plus
+
+  # Start and enable nginx
+  - systemctl enable nginx
+  - systemctl restart nginx
