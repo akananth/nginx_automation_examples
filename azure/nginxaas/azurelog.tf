@@ -14,7 +14,6 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
 
   enabled_log {
     category = "NGINXLogs"
-    enabled  = true
     retention_policy {
       enabled = false
       days    = 0
@@ -23,7 +22,6 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
 
   enabled_log {
     category = "NGINXSecurityLogs"
-    enabled  = true
     retention_policy {
       enabled = false
       days    = 0

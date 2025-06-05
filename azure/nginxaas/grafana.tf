@@ -9,7 +9,7 @@ resource "azurerm_dashboard_grafana" "this" {
 
   sku = "Standard"
 
-  grafana_major_version = "8"
+  grafana_major_version = "11"
 
   tags = var.tags
 }
