@@ -10,12 +10,6 @@ packages:
   - wget
   - curl
 
-bootcmd:
-  - mkdir -p /etc/ssl/nginx
-  - mkdir -p /etc/nginx
-  - mkdir -p /usr/share/nginx/html
-  - mkdir -p /opt/nginx-init
-
 write_files:
   - path: /etc/ssl/nginx/nginx-repo.crt
     permissions: '0644'
@@ -77,8 +71,8 @@ write_files:
           access_log /var/log/nginx/access.log main;
 
           server {
-              listen 80;
-              server_name ${server_ip};
+              listen 80 default_server;
+              server_name localhost;
 
               location / {
                   root /usr/share/nginx/html;
@@ -95,8 +89,8 @@ write_files:
       }
       EOF
 
-      systemctl enable nginx
-      systemctl restart nginx
+        systemctl enable nginx
+        systemctl restart nginx
 
-runcmd:
-  - bash /opt/nginx-init/install-nginx.sh
+    runcmd:
+        - bash /opt/nginx-init/install-nginx.sh
