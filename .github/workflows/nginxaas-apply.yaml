@@ -1,4 +1,4 @@
-name: 'NGINXaaS WAF Apply'
+name: 'Apply NGINXaaS WAF Deployment'
 
 on:
   push:
@@ -70,5 +70,8 @@ jobs:
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-
-     
+        
+      - name: Show rendered cloud-init (VM 0)
+        run: |
+          echo "------ Rendered cloud-init for VM 0 ------"
+          terraform output vm0_cloud_init
