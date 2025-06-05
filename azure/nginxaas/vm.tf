@@ -24,27 +24,6 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
-# Local cloud-init config using templatefile for dynamic server_name and HTML
-locals {
-  cloud_init_configs = [
-    templatefile("${path.module}/cloud-init.tpl", {
-      nginx_cert    = var.nginx_plus_cert
-      nginx_key     = var.nginx_plus_key
-      nginx_jwt     = var.nginx_jwt
-      html_filename = "coffee.html"
-      html_content  = file("${path.module}/coffee.html")
-      server_ip     = azurerm_public_ip.vm_pip[0].ip_address
-    }),
-    templatefile("${path.module}/cloud-init.tpl", {
-      nginx_cert    = var.nginx_plus_cert
-      nginx_key     = var.nginx_plus_key
-      nginx_jwt     = var.nginx_jwt
-      html_filename = "tea.html"
-      html_content  = file("${path.module}/tea.html")
-      server_ip     = azurerm_public_ip.vm_pip[1].ip_address
-    })
-  ]
-}
 
 # Create Ubuntu VMs with NGINX Plus
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
@@ -76,7 +55,15 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(local.cloud_init_configs[count.index])
+  # Move the templatefile here
+  custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
+    nginx_cert    = var.nginx_plus_cert
+    nginx_key     = var.nginx_plus_key
+    nginx_jwt     = var.nginx_jwt
+    html_filename = count.index == 0 ? "coffee.html" : "tea.html"
+    html_content  = count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html")
+    server_ip     = azurerm_public_ip.vm_pip[count.index].ip_address
+  }))
 
   tags = var.tags
 }
