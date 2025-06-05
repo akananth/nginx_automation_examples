@@ -10,16 +10,24 @@ packages:
   - wget
   - curl
 
+bootcmd:
+  - mkdir -p /etc/ssl/nginx
+  - mkdir -p /etc/nginx
+  - mkdir -p /usr/share/nginx/html
+  - mkdir -p /opt/nginx-init
+
 write_files:
   - path: /etc/ssl/nginx/nginx-repo.crt
+    encoding: b64
     permissions: '0644'
     content: |
-      ${nginx_cert}
+      ${nginx_cert_b64}
 
   - path: /etc/ssl/nginx/nginx-repo.key
+    encoding: b64
     permissions: '0644'
     content: |
-      ${nginx_key}
+      ${nginx_key_b64}
 
   - path: /etc/nginx/license.jwt
     permissions: '0644'
@@ -39,7 +47,6 @@ write_files:
 
       apt update
       apt install -y apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
-
       wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
       echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu $(lsb_release -cs) nginx-plus" > /etc/apt/sources.list.d/nginx-plus.list
       wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
@@ -71,8 +78,8 @@ write_files:
           access_log /var/log/nginx/access.log main;
 
           server {
-              listen 80 default_server;
-              server_name localhost;
+              listen 80;
+              server_name ${server_ip};
 
               location / {
                   root /usr/share/nginx/html;
@@ -89,8 +96,8 @@ write_files:
       }
       EOF
 
-        systemctl enable nginx
-        systemctl restart nginx
+      systemctl enable nginx
+      systemctl restart nginx
 
-    runcmd:
-        - bash /opt/nginx-init/install-nginx.sh
+runcmd:
+  - bash /opt/nginx-init/install-nginx.sh

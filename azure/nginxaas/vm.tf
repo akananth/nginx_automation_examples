@@ -55,14 +55,13 @@ resource "azurerm_linux_virtual_machine" "nginx_vm" {
     version   = "latest"
   }
 
-  # Move the templatefile here
   custom_data = base64encode(templatefile("${path.module}/cloud-init.tpl", {
-    nginx_cert    = var.nginx_plus_cert
-    nginx_key     = var.nginx_plus_key
-    nginx_jwt     = var.nginx_jwt
-    html_filename = count.index == 0 ? "coffee.html" : "tea.html"
-    html_content  = count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html")
-    server_ip     = azurerm_public_ip.vm_pip[count.index].ip_address
+    nginx_cert_b64 = base64encode(var.nginx_plus_cert)
+    nginx_key_b64  = base64encode(var.nginx_plus_key)
+    nginx_jwt      = var.nginx_jwt
+    html_filename  = count.index == 0 ? "coffee.html" : "tea.html"
+    html_content   = count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html")
+    server_ip      = azurerm_public_ip.vm_pip[count.index].ip_address
   }))
 
   tags = var.tags
