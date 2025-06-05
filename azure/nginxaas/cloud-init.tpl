@@ -45,8 +45,6 @@ runcmd:
     worker_processes auto;
     error_log /var/log/nginx/error.log notice;
     pid /run/nginx.pid;
-    load_module modules/ngx_http_js_module.so;
-    load_module modules/ngx_stream_js_module.so;
 
     events {
         worker_connections 1024;

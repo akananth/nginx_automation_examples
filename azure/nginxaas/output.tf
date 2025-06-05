@@ -38,4 +38,13 @@ output "vm_ids" {
   value       = [for vm in azurerm_linux_virtual_machine.nginx_vm : vm.id]
 }
 
+output "grafana_name" {
+  value       = azurerm_dashboard_grafana.this.name
+  description = "The name of the Azure Managed Grafana resource"
+}
+
+output "grafana_url" {
+  value       = azurerm_dashboard_grafana.this.endpoint
+  description = "The public endpoint of the Grafana dashboard"
+}
 
