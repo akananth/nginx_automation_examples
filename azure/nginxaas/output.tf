@@ -37,3 +37,8 @@ output "vm_ids" {
   description = "IDs of the Azure Linux virtual machines"
   value       = [for vm in azurerm_linux_virtual_machine.nginx_vm : vm.id]
 }
+
+output "vm0_cloud_init" {
+  value     = base64decode(azurerm_linux_virtual_machine.nginx_vm[0].custom_data)
+  sensitive = false
+}
