@@ -28,6 +28,5 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
     }
   }
 
-  # optional, but safe for deployment order
   depends_on = [azurerm_nginx_deployment.main]
 }
