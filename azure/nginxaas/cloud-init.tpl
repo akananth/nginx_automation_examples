@@ -24,6 +24,11 @@ write_files:
     permissions: '0644'
     content: |
       ${nginx_jwt}
+  
+  - path: /usr/share/nginx/html/${html_filename}
+    permissions: '0644'
+    content: |
+      ${html_content}
 
 
 runcmd:
@@ -36,11 +41,6 @@ runcmd:
   - wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
   - apt update
   - apt install -y nginx-plus
-
-  - path: /usr/share/nginx/html/${html_filename}
-    permissions: '0644'
-    content: |
-      ${html_content}
 
   # Write nginx.conf AFTER installation
   - |
