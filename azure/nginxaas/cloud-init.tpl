@@ -13,12 +13,12 @@ write_files:
   - path: /etc/ssl/nginx/nginx-repo.crt
     permissions: '0644'
     content: |
-      ${nginx_cert}
+      ${nginx_plus_cert}
 
   - path: /etc/ssl/nginx/nginx-repo.key
     permissions: '0644'
     content: |
-      ${nginx_key}
+      ${nginx_plus_key}
 
   - path: /etc/nginx/license.jwt
     permissions: '0644'
