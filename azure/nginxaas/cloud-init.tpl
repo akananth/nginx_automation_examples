@@ -1,4 +1,4 @@
-##cloud-config
+#cloud-config
 package_update: true
 package_upgrade: true
 packages:
@@ -26,35 +26,21 @@ write_files:
       ${nginx_jwt}
 
   - path: /usr/share/nginx/html/${html_filename}
-    encoding: b64
     permissions: '0644'
     content: |
-      ${html_content_b64}
+      ${html_content}
 
 runcmd:
   - mkdir -p /etc/ssl/nginx
   - apt update
-  - apt install apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
-
-  # Add NGINX signing key
-  -  wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | sudo tee  /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-
-  # Configure nginx-plus repo/etc/apt/sources.list.d/nginx-plus.list
+  - apt install -y apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
+  - wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | sudo tee  /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
   - printf "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu $(lsb_release -cs) nginx-plus\n" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
-
-  # Download policy for nginx repo
   - wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
-
-  # Update and install nginx-plus
   - apt update
   - apt install -y nginx-plus
-
-  # Start and enable nginx
-  - systemctl enable nginx
-  - systemctl restart nginx
-
   - |
-    cat <<EOF > /etc/nginx/nginx.conf
+    cat <<'EOF' > /etc/nginx/nginx.conf
     user nginx;
     worker_processes auto;
     error_log /var/log/nginx/error.log notice;
@@ -72,9 +58,9 @@ runcmd:
         sendfile on;
         keepalive_timeout 65;
 
-        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
-                        '$status $body_bytes_sent "$http_referer" '
-                        '"$http_user_agent" "$http_x_forwarded_for"';
+        log_format main '\$remote_addr - \$remote_user [\$time_local] "\$request" '
+                        '\$status \$body_bytes_sent "\$http_referer" '
+                        '"\$http_user_agent" "\$http_x_forwarded_for"';
         access_log /var/log/nginx/access.log main;
 
         server {
@@ -95,3 +81,5 @@ runcmd:
         }
     }
     EOF
+  - systemctl enable nginx
+  - systemctl restart nginx
