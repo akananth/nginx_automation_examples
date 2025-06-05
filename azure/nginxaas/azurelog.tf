@@ -1,7 +1,7 @@
 resource "azurerm_log_analytics_workspace" "nginx_logging" {
   name                = "${var.project_prefix}-azure-log"
-  location            = var.azure_region
-  resource_group_name = var.resource_group_name
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
   sku                 = "PerGB2018"
   retention_in_days   = 30
   tags                = var.tags
