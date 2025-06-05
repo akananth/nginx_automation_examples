@@ -28,16 +28,16 @@ resource "azurerm_network_interface" "vm_nic" {
 locals {
   cloud_init_configs = [
     templatefile("${path.module}/cloud-init.tpl", {
-      nginx_cert    = var.nginx_cert
-      nginx_key     = var.nginx_key
+      nginx_cert    = var.nginx_plus_cert
+      nginx_key     = var.nginx_plus_key
       nginx_jwt     = var.nginx_jwt
       html_filename = "coffee.html"
       html_content  = file("${path.module}/coffee.html")
       server_ip     = azurerm_public_ip.vm_pip[0].ip_address
     }),
     templatefile("${path.module}/cloud-init.tpl", {
-      nginx_cert    = var.nginx_cert
-      nginx_key     = var.nginx_key
+      nginx_cert    = var.nginx_plus_cert
+      nginx_key     = var.nginx_plus_key
       nginx_jwt     = var.nginx_jwt
       html_filename = "tea.html"
       html_content  = file("${path.module}/tea.html")
