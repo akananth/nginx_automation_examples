@@ -33,7 +33,7 @@ data "template_file" "cloud_init" {
     nginx_key     = indent(6, var.nginx_plus_key)
     nginx_jwt     = indent(6, var.nginx_jwt)
     html_filename = count.index == 0 ? "coffee.html" : "tea.html"
-    html_content  = count.index == 0 ? file("${path.module}/coffee.html") : file("${path.module}/tea.html")
+    html_content  = indent(6, file("${path.module}/${count.index == 0 ? "coffee.html" : "tea.html"}"))
     server_ip     = azurerm_public_ip.vm_pip[count.index].ip_address
   }
 }
