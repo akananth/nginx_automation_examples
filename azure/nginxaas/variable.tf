@@ -27,7 +27,7 @@ variable "resource_group_name" {
 variable "sku" {
   type        = string
   description = "NGINXaaS SKU tier"
-  default     = "standardv2_Monthly"
+  default     = "standardv2_Monthly_gmz7xq9ge3py"
 }
 
 variable "capacity" {
