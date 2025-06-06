@@ -28,5 +28,5 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
     }
   }
 
-  depends_on = [azurerm_nginx_configuration]
+  depends_on = [azurerm_nginx_configuration.main]
 }
