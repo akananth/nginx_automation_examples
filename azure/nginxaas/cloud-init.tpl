@@ -1,4 +1,4 @@
-#cloud-config
+#cloud-configs
 package_update: true
 package_upgrade: true
 packages:
