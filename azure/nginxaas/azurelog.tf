@@ -14,13 +14,8 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
 
   enabled_log {
     category = "NGINXLogs"
-    retention_policy { enabled = false }
   }
 
-  enabled_log {
-    category = "NGINXSecurityLogs"
-    retention_policy { enabled = false }
-  }
   # Explicitly wait for App Protect to initialize
   depends_on = [time_sleep.wait_for_app_protect]
 }
