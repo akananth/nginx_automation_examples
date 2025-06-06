@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.29.0"
+      version = "~> 4.30.0"
     }
     http = {
       source  = "hashicorp/http"
@@ -34,7 +34,7 @@ locals {
       protocol                   = "Tcp"
       source_port_range          = "*"
       destination_port_range     = "80"
-      source_address_prefix      = "0.0.0.0/0"
+      source_address_prefix      = "${var.admin_ip}/32"
       destination_address_prefix = "*"
     },
     {
@@ -45,7 +45,7 @@ locals {
       protocol                   = "Tcp"
       source_port_range          = "*"
       destination_port_range     = "443"
-      source_address_prefix      = "0.0.0.0/0"
+      source_address_prefix      = "${var.admin_ip}/32"
       destination_address_prefix = "*"
     }
   ]
@@ -70,9 +70,9 @@ resource "azurerm_resource_provider_registration" "nginx" {
   name = "NGINX.NGINXPLUS"
 }
 
-resource "time_sleep" "wait_2_minutes" {
+resource "time_sleep" "wait_1_minutes" {
   depends_on      = [azurerm_resource_provider_registration.nginx]
-  create_duration = "120s"
+  create_duration = "60s"
 }
 
 resource "azurerm_resource_group" "main" {
@@ -175,7 +175,7 @@ resource "azurerm_role_assignment" "network_contributor" {
 
 resource "azurerm_nginx_deployment" "main" {
   depends_on = [
-    time_sleep.wait_2_minutes,
+    time_sleep.wait_1_minutes,
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
     azurerm_subnet_network_security_group_association.main
