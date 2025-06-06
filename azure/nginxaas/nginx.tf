@@ -47,3 +47,8 @@ resource "azurerm_nginx_configuration" "main" {
 
   depends_on = [azurerm_nginx_deployment.main]
 }
+
+resource "time_sleep" "wait_for_app_protect" {
+  depends_on      = [azurerm_nginx_configuration.main]
+  create_duration = "120s" # Wait 2 minutes for App Protect to initialize
+}
