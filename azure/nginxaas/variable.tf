@@ -82,11 +82,6 @@ variable "nginx_jwt" {
   sensitive   = true
 }
 
-variable "grafana_user_object_id" {
-  description = "The Azure AD object ID of the user or group to grant Grafana Viewer access"
-  type        = string
-}
-
 
 # Optional storage backend settings for remote state
 variable "storage_account_name" {
