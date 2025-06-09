@@ -20,7 +20,7 @@ resource "azapi_resource" "grafana_dashboard" {
   location  = azurerm_resource_group.main.location
 
   body = jsonencode({
-    properties = jsondecode(file("${path.module}/nginxaas/n4-dashboard.json"))
+    properties = jsondecode(file("${path.module}/n4-dashboard.json"))
   })
 
   depends_on = [
