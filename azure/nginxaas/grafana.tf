@@ -14,14 +14,16 @@ resource "azurerm_dashboard_grafana" "this" {
 }
 
 resource "azapi_resource" "grafana_dashboard" {
-  type      = "Microsoft.Dashboard/grafana/dashboards@2022-08-01"
-  name      = "n4-dashboard"
-  parent_id = azurerm_dashboard_grafana.this.id
-  location  = azurerm_resource_group.main.location
+  type                     = "Microsoft.Dashboard/grafana/dashboards@2022-08-01"
+  name                     = "n4-dashboard"
+  parent_id                = azurerm_dashboard_grafana.this.id
+  location                 = azurerm_resource_group.main.location
 
-  body = jsonencode({
+  schema_validation_enabled = false
+
+  body = {
     properties = jsondecode(file("${path.module}/n4-dashboard.json"))
-  })
+  }
 
   depends_on = [
     azurerm_dashboard_grafana.this
