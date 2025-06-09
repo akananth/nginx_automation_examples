@@ -310,7 +310,6 @@
                 "region": "${var.azure_region}",
                 "resourceGroup": "${var.resource_group_name}",
                 "resourceName": "${var.project_prefix}-deploy"
-极
               }
             ],
             "timeGrain": "auto",
