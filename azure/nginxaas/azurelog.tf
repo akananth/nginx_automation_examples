@@ -13,9 +13,11 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.nginx_logging.id
 
   enabled_log {
-    category = "NGINXLogs"
+    category = "NginxLogs"
   }
 
-  # Explicitly wait for App Protect to initialize
-  depends_on = [time_sleep.wait_for_app_protect]
+   enabled_log {
+    category = "NginxSecurityLogs"
+  }
+
 }
