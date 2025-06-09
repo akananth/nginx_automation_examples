@@ -8,8 +8,15 @@ resource "azurerm_dashboard_grafana" "this" {
   }
 
   sku = "Standard"
-
   grafana_major_version = "11"
 
   tags = var.tags
+}
+
+resource "azurerm_role_assignment" "grafana_viewer" {
+  scope                = azurerm_dashboard_grafana.this.id
+  role_definition_name = "Grafana Viewer"
+  principal_id         = var.grafana_user_object_id
+
+  depends_on = [azurerm_dashboard_grafana.this]
 }
