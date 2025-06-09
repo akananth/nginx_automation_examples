@@ -23,44 +23,13 @@ resource "azurerm_role_assignment" "grafana_viewer" {
   ]
 }
 
-resource "azurerm_template_deployment" "grafana_dashboard_import" {
-  name                = "grafana-n4-dashboard-import"
-  resource_group_name = azurerm_resource_group.main.name
-  deployment_mode     = "Incremental"
+resource "azapi_resource" "grafana_dashboard" {
+  type      = "Microsoft.Dashboard/grafana/dashboards@2022-08-01"
+  name      = "n4-dashboard"
+  parent_id = azurerm_dashboard_grafana.this.id
+  location  = azurerm_resource_group.main.location
 
-  parameters = {
-    grafanaName   = azurerm_dashboard_grafana.this.name
-    dashboardName = "n4-dashboard"
-    dashboardJson = base64encode(file("${path.module}/nginxaas/n4-dashboard.json"))
-  }
-
-  template_body = <<DEPLOY
-{
-  "\$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "grafanaName": {
-      "type": "string"
-    },
-    "dashboardName": {
-      "type": "string"
-    },
-    "dashboardJson": {
-      "type": "string"
-    }
-  },
-  "resources": [
-    {
-      "type": "Microsoft.Dashboard/grafana/dashboards",
-      "apiVersion": "2022-08-01",
-      "name": "[concat(parameters('grafanaName'), '/', parameters('dashboardName'))]",
-      "properties": {
-        "dashboard": "[base64ToString(parameters('dashboardJson'))]"
-      }
-    }
-  ]
-}
-DEPLOY
+  properties = jsondecode(file("${path.module}/nginxaas/n4-dashboard.json"))
 
   depends_on = [
     azurerm_dashboard_grafana.this
