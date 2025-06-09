@@ -189,12 +189,8 @@ resource "azurerm_nginx_deployment" "main" {
   automatic_upgrade_channel   = "stable"
   diagnose_support_enabled    = true
 
-  web_application_firewall {
-    activation_state_enabled = true
-  }
-
   identity {
-    type         = "UserAssigned"
+    type         = "SystemAssigned,UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.main.id]
   }
 
@@ -204,6 +200,10 @@ resource "azurerm_nginx_deployment" "main" {
 
   network_interface {
     subnet_id = azurerm_subnet.main.id
+  }
+
+  web_application_firewall {
+    activation_state_enabled = true
   }
 
   tags = var.tags
