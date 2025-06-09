@@ -190,9 +190,10 @@ resource "azurerm_nginx_deployment" "main" {
   diagnose_support_enabled    = true
 
   identity {
-    type         = "SystemAssigned,UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.main.id]
+   type         = "SystemAssigned, UserAssigned" 
+   identity_ids = [azurerm_user_assigned_identity.main.id]
   }
+
 
   frontend_public {
     ip_address = [azurerm_public_ip.main.id]
