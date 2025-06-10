@@ -1,18 +1,22 @@
-name: 'Apply NGINXaaS WAF Deployment'
+name: 'Apply NGINXaaS WAF Deployment with Grafana'
 
 on:
   push:
-    branches:
-      - nginxaas-apply
+    branches: [nginxaas-apply]
+  workflow_dispatch:
 
 jobs:
   terraform:
-    name: 'NGINXaaS WAF'
+    name: 'Deploy NGINXaaS WAF & Grafana'
     runs-on: ubuntu-latest
     environment: production
     defaults:
       run:
         working-directory: ./azure/nginxaas
+
+    outputs:
+      grafana_name: ${{ steps.outputs.outputs.grafana_name }}
+      resource_group_name: ${{ steps.outputs.outputs.resource_group_name }}
 
     steps:
       - name: Checkout code
@@ -36,14 +40,12 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Set Azure Region with Fallback
+      - name: Set Azure Region
         id: set-region
         run: |
-          if [ -z "${{ vars.azure_region }}" ]; then
-            echo "region=eastus2" >> $GITHUB_OUTPUT
-          else
-            echo "region=${{ vars.azure_region }}" >> $GITHUB_OUTPUT
-          fi
+          REGION="${{ vars.azure_region }}"
+          if [ -z "$REGION" ]; then REGION="eastus2"; fi
+          echo "region=$REGION" >> $GITHUB_OUTPUT
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
@@ -65,10 +67,62 @@ jobs:
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
           TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
+          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-        
-      
+
+      - name: Extract Terraform Outputs
+        id: outputs
+        run: |
+          echo "grafana_name=$(terraform output -raw grafana_name)" >> $GITHUB_OUTPUT
+          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+
+  grafana:
+    name: 'Grafana Role Assignment & Dashboard Import'
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Enable Grafana Service Account
+        run: |
+          az grafana update \
+            --name "${{ needs.terraform.outputs.grafana_name }}" \
+            --resource-group "${{ needs.terraform.outputs.resource_group_name }}" \
+            --service-account Enabled
+
+      - name: Create Service Account
+        run: |
+          az grafana service-account create \
+            --name "${{ needs.terraform.outputs.grafana_name }}" \
+            --service-account tf-sa \
+            --role Editor \
+            --resource-group "${{ needs.terraform.outputs.resource_group_name }}"
+
+      - name: Create Service Account Token
+        run: |
+          az grafana service-account token create \
+            --name "${{ needs.terraform.outputs.grafana_name }}" \
+            --service-account tf-sa \
+            --token tf-token \
+            --query token -o tsv > token.txt
+
+      - name: Import Grafana Dashboard
+        run: |
+          GRAFANA_NAME="${{ needs.terraform.outputs.grafana_name }}"
+          RG="${{ needs.terraform.outputs.resource_group_name }}"
+          TOKEN=$(cat token.txt)
+          az grafana dashboard import \
+            --name "$GRAFANA_NAME" \
+            --resource-group "$RG" \
+            --definition "@./azure/nginxaas/n4-dashboard.json" \
+            --token "$TOKEN"
