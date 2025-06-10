@@ -1,3 +1,4 @@
+# grafana.tf
 data "azurerm_resource_group" "rg" {
   name = var.resource_group_name
 }
@@ -10,7 +11,7 @@ data "azurerm_role_definition" "grafana_admin" {
 resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.project_prefix}-grafana"
   location            = data.azurerm_resource_group.rg.location
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_resource_group.rg.name
 
   identity {
     type = "SystemAssigned"
