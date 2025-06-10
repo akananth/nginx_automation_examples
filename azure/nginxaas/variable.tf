@@ -22,6 +22,10 @@ variable "resource_group_name" {
   type        = string
   description = "Azure Resource group name"
 }
+variable "grafana_user_object_id" {
+  type        = string
+  description = "Azure AD Object ID of the user to assign Grafana Viewer role"
+}
 
 variable "sku" {
   type        = string
