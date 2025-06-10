@@ -51,43 +51,53 @@ jobs:
 
       - name: Cleanup Diagnostic Settings and Grafana
         run: |
+          set -e
           RG_NAME="${{ vars.project_prefix }}-rg"
           SUBSCRIPTION_ID="${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}"
 
-          # NGINX resource ID - adjust if different
+          # NGINX resource ID - update as needed
           NGINX_RESOURCE_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Nginx.NginxPlus/nginxDeployments/akash-deploy"
-          GRAFANA_RESOURCE_ID=$(az grafana list --resource-group $RG_NAME --query "[0].id" -o tsv)
-
-          echo "🔍 Deleting NGINX Diagnostic Settings..."
-          DIAG_SETTINGS=$(az monitor diagnostic-settings list --resource $NGINX_RESOURCE_ID --query "[].name" -o tsv)
-          for setting in $DIAG_SETTINGS; do
-            echo "Deleting diagnostic setting $setting..."
-            az monitor diagnostic-settings delete --name "$setting" --resource $NGINX_RESOURCE_ID || echo "Failed to delete diagnostic setting $setting, continuing..."
-          done
-
-          if [ -n "$GRAFANA_RESOURCE_ID" ]; then
-            echo "🔍 Deleting Grafana resource $GRAFANA_RESOURCE_ID..."
-            az resource delete --ids $GRAFANA_RESOURCE_ID || echo "Failed to delete Grafana resource, continuing..."
+          
+          echo "🔍 Checking NGINX diagnostic settings..."
+          if az resource show --ids "$NGINX_RESOURCE_ID" > /dev/null 2>&1; then
+            DIAG_SETTINGS=$(az monitor diagnostic-settings list --resource "$NGINX_RESOURCE_ID" --query "[].name" -o tsv)
+            for setting in $DIAG_SETTINGS; do
+              echo "Deleting diagnostic setting $setting..."
+              az monitor diagnostic-settings delete --name "$setting" --resource "$NGINX_RESOURCE_ID" || echo "Warning: Failed to delete diagnostic setting $setting, continuing..."
+            done
           else
-            echo "No Grafana resource found to delete."
+            echo "NGINX deployment resource not found, skipping diagnostic settings cleanup."
+          fi
+
+          echo "🔍 Checking for Grafana resources..."
+          GRAFANA_RESOURCE_ID=$(az grafana list --resource-group "$RG_NAME" --query "[0].id" -o tsv || echo "")
+          if [ -n "$GRAFANA_RESOURCE_ID" ]; then
+            echo "Deleting Grafana resource $GRAFANA_RESOURCE_ID..."
+            az resource delete --ids "$GRAFANA_RESOURCE_ID" || echo "Warning: Failed to delete Grafana resource, continuing..."
+          else
+            echo "No Grafana resource found, skipping."
           fi
 
       - name: Delete Resource Group (Wait)
         run: |
           RG_NAME="${{ vars.project_prefix }}-rg"
           echo "Deleting resource group $RG_NAME..."
-          az group delete --name $RG_NAME --yes
-          echo "Waiting for resource group deletion to complete..."
-          for i in {1..60}; do
-            sleep 10
-            if ! az group exists --name $RG_NAME | grep -q true; then
-              echo "✅ Resource group $RG_NAME successfully deleted."
-              exit 0
-            fi
-            echo "⌛ Still deleting resource group... ($i/60)"
-          done
-          echo "::error::Resource group $RG_NAME still exists after waiting."
-          exit 1
+          if az group exists --name "$RG_NAME"; then
+            az group delete --name "$RG_NAME" --yes
+            echo "Waiting for resource group deletion to complete..."
+            for i in {1..60}; do
+              sleep 10
+              if ! az group exists --name "$RG_NAME"; then
+                echo "✅ Resource group $RG_NAME successfully deleted."
+                exit 0
+              fi
+              echo "⌛ Still deleting resource group... ($i/60)"
+            done
+            echo "::error::Resource group $RG_NAME still exists after waiting."
+            exit 1
+          else
+            echo "Resource group $RG_NAME does not exist, skipping deletion."
+          fi
 
       - name: Unregister NGINX Resource Provider (Only after resources deleted)
         run: |
@@ -95,7 +105,7 @@ jobs:
           STATE=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "NotFound")
           if [[ "$STATE" == "Registered" ]]; then
             echo "Unregistering NGINX.NGINXPLUS provider..."
-            az provider unregister --namespace NGINX.NGINXPLUS --wait || echo "Provider unregister failed or timed out."
+            az provider unregister --namespace NGINX.NGINXPLUS --wait || echo "Warning: Provider unregister failed or timed out, continuing..."
           else
             echo "NGINX provider already unregistered or not found."
           fi
