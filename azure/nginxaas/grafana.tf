@@ -44,7 +44,7 @@ resource "azurerm_dashboard_grafana" "grafana" {
 # Assign Grafana Viewer role to the group
 resource "azurerm_role_assignment" "grafana_viewer_assignment" {
   scope              = azurerm_dashboard_grafana.grafana.id
-  role_definition_id = data.azurerm_role_definition.grafana_viewer.role_definition_resource_id
+  role_definition_id = data.azurerm_role_definition.grafana_viewer.id
   principal_id       = azuread_group.grafana_viewers.id
 
   depends_on = [azurerm_dashboard_grafana.grafana]
