@@ -1,4 +1,3 @@
-
 # Create Grafana instance
 resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.project_prefix}-grafana"
@@ -29,7 +28,6 @@ resource "azurerm_role_assignment" "grafana_viewer" {
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
 
-
 # Create Azure AD Group for Grafana Viewers
 resource "azuread_group" "grafana_viewers" {
   display_name     = "${var.project_prefix}-grafana-viewers"
@@ -38,7 +36,7 @@ resource "azuread_group" "grafana_viewers" {
 
 # Add each user to the Grafana viewers group
 resource "azuread_group_member" "grafana_viewer_members" {
-  for_each = data.azuread_user.grafana_users
+  for_each = data.azuread_user.grafana_viewers
 
   group_object_id  = azuread_group.grafana_viewers.id
   member_object_id = each.value.object_id
@@ -52,7 +50,6 @@ data "azurerm_role_definition" "grafana_viewer" {
   name  = "Grafana Viewer"
   scope = data.azurerm_subscription.current.id
 }
-
 
 # Assign Grafana Viewer role to the group
 resource "azurerm_role_assignment" "grafana_viewer_assignment" {
