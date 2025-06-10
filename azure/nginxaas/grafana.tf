@@ -14,7 +14,7 @@ resource "azurerm_dashboard_grafana" "this" {
 }
 
 resource "azurerm_role_assignment" "grafana_viewer" {
-  scope                = azurerm_dashboard_grafana.main.id
+  scope                = azurerm_dashboard_grafana.this.id     # use "this" here
   role_definition_name = "Grafana Viewer"
   principal_id         = azurerm_user_assigned_identity.main.principal_id
 
@@ -22,5 +22,3 @@ resource "azurerm_role_assignment" "grafana_viewer" {
     azurerm_dashboard_grafana.this
   ]
 }
-
-
