@@ -20,8 +20,7 @@ variable "azure_region" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Resource group name"
-  default     = ""
+  description = "Azure Resource group name"
 }
 
 variable "sku" {
