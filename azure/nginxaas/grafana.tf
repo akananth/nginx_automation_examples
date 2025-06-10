@@ -1,6 +1,11 @@
-data "azurerm_role_definition" "grafana_admin" {
-  name  = "Grafana Admin"
-  scope = "/subscriptions/${var.subscription_id}"
+provider "azuread" {}
+
+data "azurerm_subscription" "current" {}
+
+# Use subscription scope for role definition lookup
+data "azurerm_role_definition" "grafana_viewer" {
+  name  = "Grafana Viewer"
+  scope = data.azurerm_subscription.current.id
 }
 
 resource "azurerm_dashboard_grafana" "grafana" {
@@ -16,10 +21,15 @@ resource "azurerm_dashboard_grafana" "grafana" {
   grafana_major_version = "11"
 }
 
-resource "azurerm_role_assignment" "grafana_admin_assignment" {
+# Look up user by email address instead of using object ID directly
+data "azuread_user" "grafana_user" {
+  user_principal_name = var.grafana_user_email 
+}
+
+resource "azurerm_role_assignment" "grafana_viewer_assignment" {
   scope              = azurerm_dashboard_grafana.grafana.id
-  role_definition_id = data.azurerm_role_definition.grafana_admin.id
-  principal_id       = azurerm_dashboard_grafana.grafana.identity[0].principal_id
+  role_definition_id = data.azurerm_role_definition.grafana_viewer.role_definition_resource_id
+  principal_id       = data.azuread_user.grafana_user.object_id
 
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
