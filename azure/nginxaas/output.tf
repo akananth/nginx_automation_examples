@@ -23,6 +23,11 @@ output "nginx_deployment_id" {
   value       = azurerm_nginx_deployment.main.id
 }
 
+output "waf_status" {
+  description = "WAF status of NGINXaaS deployment"
+  value       = try(azurerm_nginx_deployment.main.web_application_firewall[0].status, "not configured")
+}
+
 output "vm_public_ips" {
   description = "Public IP addresses of the created VMs"
   value       = azurerm_public_ip.vm_pip[*].ip_address
@@ -39,13 +44,13 @@ output "vm_ids" {
 }
 
 output "grafana_name" {
-  value       = azurerm_dashboard_grafana.this.name
   description = "The name of the Azure Managed Grafana resource"
+  value       = azurerm_dashboard_grafana.this.name
 }
 
 output "grafana_url" {
-  value       = azurerm_dashboard_grafana.this.endpoint
   description = "The public endpoint of the Grafana dashboard"
+  value       = azurerm_dashboard_grafana.this.endpoint
 }
 
 output "log_analytics_workspace_name" {
@@ -53,3 +58,12 @@ output "log_analytics_workspace_name" {
   value       = azurerm_log_analytics_workspace.nginx_logging.name
 }
 
+output "log_analytics_workspace_id" {
+  description = "ID of the Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.nginx_logging.id
+}
+
+output "nginx_diagnostic_setting_name" {
+  description = "Name of the NGINX diagnostic setting"
+  value       = azurerm_monitor_diagnostic_setting.nginx_diagnostics.name
+}
