@@ -89,6 +89,11 @@ variable "storage_account_name" {
   description = "Azure storage account name for Terraform state"
 }
 
+variable "grafana_user_object_id" {
+  description = "Azure AD Object ID to assign Grafana access"
+  type        = string
+}
+
 variable "container_name" {
   type        = string
   description = "Azure storage container name for Terraform state"
