@@ -6,6 +6,11 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.30.0"
     }
+    template = {
+     source  = "hashicorp/template"
+     version = "2.3.0"
+    }
+
     http = {
       source  = "hashicorp/http"
       version = "~> 3.0"
@@ -13,10 +18,6 @@ terraform {
     time = {
       source  = "hashicorp/time"
       version = "~> 0.9.1"
-    }
-    azapi = {
-      source  = "azure/azapi"
-      version = ">=2.0"
     }
   }
 }

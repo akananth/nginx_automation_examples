@@ -1,6 +1,6 @@
-# Data source to dynamically get the Role Definition ID for "Grafana Viewer"
-data "azurerm_role_definition" "grafana_viewer" {
-  name  = "Grafana Viewer"
+# Data source to dynamically get the Role Definition ID for "Grafana Admin"
+data "azurerm_role_definition" "grafana_admin" {
+  name  = "Grafana Admin"
   scope = "/subscriptions/${var.subscription_id}"
 }
 
@@ -19,9 +19,9 @@ resource "azurerm_dashboard_grafana" "this" {
   tags = var.tags
 }
 
-resource "azurerm_role_assignment" "grafana_viewer" {
+resource "azurerm_role_assignment" "grafana_admin" {
   scope              = azurerm_dashboard_grafana.this.id
-  role_definition_id = data.azurerm_role_definition.grafana_viewer.id
+  role_definition_id = data.azurerm_role_definition.grafana_admin.id
   principal_id       = azurerm_user_assigned_identity.main.principal_id
 
   depends_on = [
