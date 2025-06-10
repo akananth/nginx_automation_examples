@@ -1,6 +1,6 @@
 # grafana.tf
 data "azurerm_resource_group" "rg" {
-  name = var.resource_group_name
+  name = local.resource_group_name
 }
 
 data "azurerm_role_definition" "grafana_admin" {
