@@ -1,13 +1,16 @@
-# Data source to dynamically get the Role Definition ID for "Grafana Admin"
+ata "azurerm_resource_group" "rg" {
+  name = var.resource_group_name
+}
+
 data "azurerm_role_definition" "grafana_admin" {
   name  = "Grafana Admin"
   scope = "/subscriptions/${var.subscription_id}"
 }
 
-resource "azurerm_dashboard_grafana" "this" {
+resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.project_prefix}-grafana"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = var.resource_group_name
 
   identity {
     type = "SystemAssigned"
@@ -15,16 +18,12 @@ resource "azurerm_dashboard_grafana" "this" {
 
   sku                   = "Standard"
   grafana_major_version = "11"
-
-  tags = var.tags
 }
 
-resource "azurerm_role_assignment" "grafana_admin" {
-  scope              = azurerm_dashboard_grafana.this.id
+resource "azurerm_role_assignment" "grafana_admin_assignment" {
+  scope              = azurerm_dashboard_grafana.grafana.id
   role_definition_id = data.azurerm_role_definition.grafana_admin.id
-  principal_id       = azurerm_user_assigned_identity.main.principal_id
+  principal_id       = azurerm_dashboard_grafana.grafana.identity[0].principal_id
 
-  depends_on = [
-    azurerm_dashboard_grafana.this
-  ]
+  depends_on = [azurerm_dashboard_grafana.grafana]
 }
