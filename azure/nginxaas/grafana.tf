@@ -1,8 +1,7 @@
-provider "azuread" {}
-
+# Get current subscription for role definition scope
 data "azurerm_subscription" "current" {}
 
-# Use subscription scope for role definition lookup
+# Get Grafana Viewer role definition
 data "azurerm_role_definition" "grafana_viewer" {
   name  = "Grafana Viewer"
   scope = data.azurerm_subscription.current.id
@@ -21,15 +20,19 @@ resource "azurerm_dashboard_grafana" "grafana" {
   grafana_major_version = "11"
 }
 
-# Look up user by email address instead of using object ID directly
-data "azuread_user" "grafana_user" {
-  user_principal_name = var.grafana_user_email 
+# Lookup Azure AD users by email
+data "azuread_user" "grafana_viewers" {
+  for_each             = toset(var.grafana_viewer_emails)
+  user_principal_name  = each.key
 }
 
-resource "azurerm_role_assignment" "grafana_viewer_assignment" {
+# Assign Grafana Viewer role to each user
+resource "azurerm_role_assignment" "grafana_viewer" {
+  for_each = data.azuread_user.grafana_viewers
+
   scope              = azurerm_dashboard_grafana.grafana.id
   role_definition_id = data.azurerm_role_definition.grafana_viewer.role_definition_resource_id
-  principal_id       = data.azuread_user.grafana_user.object_id
+  principal_id       = each.value.object_id
 
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
