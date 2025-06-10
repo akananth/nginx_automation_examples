@@ -23,6 +23,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Get Signed-In User Object ID
+        id: get_user
+        run: |
+         OBJECT_ID=$(az ad signed-in-user show --query objectId -o tsv)
+         echo "Azure AD Object ID: $OBJECT_ID"
+         echo "TF_VAR_grafana_viewer_object_ids=[\"$OBJECT_ID\"]" >> $GITHUB_ENV
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -34,9 +41,12 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      
+
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
+          TF_VAR_grafana_viewer_object_ids: ${{ env.TF_VAR_grafana_viewer_object_ids }}
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
@@ -47,12 +57,12 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-          # Pass your emails here if you want from secrets or vars:
-          # TF_VAR_grafana_viewer_emails: '["your.email@domain.com"]'
+
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
         env:
+          TF_VAR_grafana_viewer_object_ids: ${{ env.TF_VAR_grafana_viewer_object_ids }}
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
