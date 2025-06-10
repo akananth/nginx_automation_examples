@@ -1,3 +1,8 @@
+variable "grafana_viewer_object_ids" {
+  type        = list(string)
+  description = "List of Azure AD Object IDs to assign Grafana Viewer role"
+}
+
 # Create Grafana instance
 resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.project_prefix}-grafana"
@@ -12,50 +17,22 @@ resource "azurerm_dashboard_grafana" "grafana" {
   grafana_major_version = "11"
 }
 
-# Lookup Azure AD users by email
-data "azuread_user" "grafana_viewers" {
-  for_each            = toset(var.grafana_viewer_emails)
-  user_principal_name = each.value
-}
-
-resource "azurerm_role_assignment" "grafana_viewer" {
-  for_each = data.azuread_user.grafana_viewers
-
-  scope              = azurerm_dashboard_grafana.grafana.id
-  role_definition_id = data.azurerm_role_definition.grafana_viewer.id
-  principal_id       = each.value.object_id
-
-  depends_on = [azurerm_dashboard_grafana.grafana]
-}
-
-# Create Azure AD Group for Grafana Viewers
-resource "azuread_group" "grafana_viewers" {
-  display_name     = "${var.project_prefix}-grafana-viewers"
-  security_enabled = true
-}
-
-# Add each user to the Grafana viewers group
-resource "azuread_group_member" "grafana_viewer_members" {
-  for_each = data.azuread_user.grafana_viewers
-
-  group_object_id  = azuread_group.grafana_viewers.id
-  member_object_id = each.value.object_id
-}
-
-# Get current subscription
+# Get current subscription (needed for role scope)
 data "azurerm_subscription" "current" {}
 
-# Get role definition for "Grafana Viewer"
+# Lookup role definition ID for "Grafana Viewer"
 data "azurerm_role_definition" "grafana_viewer" {
   name  = "Grafana Viewer"
   scope = data.azurerm_subscription.current.id
 }
 
-# Assign Grafana Viewer role to the group
-resource "azurerm_role_assignment" "grafana_viewer_assignment" {
+# Assign Grafana Viewer role to each provided Object ID
+resource "azurerm_role_assignment" "grafana_viewer" {
+  for_each = toset(var.grafana_viewer_object_ids)
+
   scope              = azurerm_dashboard_grafana.grafana.id
   role_definition_id = data.azurerm_role_definition.grafana_viewer.id
-  principal_id       = azuread_group.grafana_viewers.id
+  principal_id       = each.value
 
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
