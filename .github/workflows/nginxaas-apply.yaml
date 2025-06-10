@@ -59,6 +59,7 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          TF_VAR_grafana_user_object_id: ${{ secrets.GRAFANA_USER_OBJECT_ID }}
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
@@ -72,6 +73,7 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          TF_VAR_grafana_user_object_id: ${{ secrets.GRAFANA_USER_OBJECT_ID }}
 
       - name: Extract Terraform Outputs
         id: outputs
