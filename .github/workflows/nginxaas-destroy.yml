@@ -54,7 +54,7 @@ jobs:
           RG_NAME="${{ vars.project_prefix }}-rg"
           SUBSCRIPTION_ID="${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}"
 
-          # Resource IDs - update if your resource names differ
+          # NGINX resource ID - adjust if different
           NGINX_RESOURCE_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Nginx.NginxPlus/nginxDeployments/akash-deploy"
           GRAFANA_RESOURCE_ID=$(az grafana list --resource-group $RG_NAME --query "[0].id" -o tsv)
 
@@ -72,13 +72,24 @@ jobs:
             echo "No Grafana resource found to delete."
           fi
 
-      - name: Delete Resource Group (No Wait)
+      - name: Delete Resource Group (Wait)
         run: |
           RG_NAME="${{ vars.project_prefix }}-rg"
           echo "Deleting resource group $RG_NAME..."
-          az group delete --name $RG_NAME --yes --no-wait || echo "Resource group delete command failed or group already deleted."
+          az group delete --name $RG_NAME --yes
+          echo "Waiting for resource group deletion to complete..."
+          for i in {1..60}; do
+            sleep 10
+            if ! az group exists --name $RG_NAME | grep -q true; then
+              echo "✅ Resource group $RG_NAME successfully deleted."
+              exit 0
+            fi
+            echo "⌛ Still deleting resource group... ($i/60)"
+          done
+          echo "::error::Resource group $RG_NAME still exists after waiting."
+          exit 1
 
-      - name: Unregister NGINX Resource Provider (Optional)
+      - name: Unregister NGINX Resource Provider (Only after resources deleted)
         run: |
           echo "Checking NGINX.NGINXPLUS provider registration state..."
           STATE=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "NotFound")
@@ -88,4 +99,3 @@ jobs:
           else
             echo "NGINX provider already unregistered or not found."
           fi
-
