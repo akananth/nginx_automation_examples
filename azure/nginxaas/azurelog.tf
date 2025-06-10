@@ -13,20 +13,11 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.nginx_logging.id
 
   enabled_log {
-    category = "NGINXLogs"
-    retention_policy {
-      enabled = false
-      days    = 0
-    }
+    category = "NginxLogs"
   }
 
   enabled_log {
-    category = "NGINXSecurityLogs"
-    retention_policy {
-      enabled = false
-      days    = 0
-    }
+    category = "NginxSecurityLogs"
   }
 
-  depends_on = [azurerm_nginx_deployment.main]
 }
