@@ -32,85 +32,60 @@ jobs:
         run: terraform init
         env:
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
-          
 
-      - name: Terraform Destroy (Best Effort)
+      - name: Terraform Plan & Destroy (Best Effort)
         run: |
           echo "🔄 Running terraform destroy..."
-          terraform destroy -auto-approve -input=false || echo "::warning::Terraform destroy failed. Proceeding with cleanup."
+          terraform plan -destroy -out=tfplan
+          terraform apply -auto-approve tfplan || echo "::warning::Terraform destroy failed. Proceeding with manual cleanup."
         env:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
+          TF_VAR_azure_region: ${{ vars.azure_region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
-      - name: Force Delete Resource Group If Needed
-        if: always()
+      - name: Cleanup Diagnostic Settings and Grafana
         run: |
           RG_NAME="${{ vars.project_prefix }}-rg"
+          SUBSCRIPTION_ID="${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}"
 
-          echo "🔍 Checking if resource group $RG_NAME exists..."
-          if az group exists --name "$RG_NAME" | grep -q true; then
-            echo "🔎 Listing remaining resources in $RG_NAME..."
-            RESOURCES=$(az resource list --resource-group "$RG_NAME" --query "[].name" -o tsv)
+          # Resource IDs - update if your resource names differ
+          NGINX_RESOURCE_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Nginx.NginxPlus/nginxDeployments/akash-deploy"
+          GRAFANA_RESOURCE_ID=$(az grafana list --resource-group $RG_NAME --query "[0].id" -o tsv)
 
-            if [[ -n "$RESOURCES" ]]; then
-              echo "::warning::Resource group $RG_NAME is not empty. Force deleting..."
-              echo "$RESOURCES"
-              az group delete --name "$RG_NAME" --yes --no-wait
-            else
-              echo "✅ Resource group is already empty. Deleting group..."
-              az group delete --name "$RG_NAME" --yes --no-wait
-            fi
-          else
-            echo "✅ Resource group $RG_NAME does not exist. Nothing to delete."
-          fi
-
-      - name: Wait for Resource Group to be Deleted
-        if: always()
-        run: |
-          RG_NAME="${{ vars.project_prefix }}-rg"
-          echo "⏳ Waiting for resource group $RG_NAME to be deleted..."
-
-          for i in {1..24}; do
-            sleep 10
-            if ! az group exists --name "$RG_NAME" | grep -q true; then
-              echo "✅ Resource group $RG_NAME successfully deleted."
-              exit 0
-            fi
-            echo "⌛ Still deleting... ($i/24)"
+          echo "🔍 Deleting NGINX Diagnostic Settings..."
+          DIAG_SETTINGS=$(az monitor diagnostic-settings list --resource $NGINX_RESOURCE_ID --query "[].name" -o tsv)
+          for setting in $DIAG_SETTINGS; do
+            echo "Deleting diagnostic setting $setting..."
+            az monitor diagnostic-settings delete --name "$setting" --resource $NGINX_RESOURCE_ID || echo "Failed to delete diagnostic setting $setting, continuing..."
           done
 
-          echo "::error::Resource group $RG_NAME still exists after waiting."
-          exit 1
-
-      - name: Unregister NGINX Resource Provider
-        if: always()
-        run: |
-          echo "📦 Checking registration of NGINX.NGINXPLUS..."
-          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
-
-          if [[ "$state" == "Registered" ]]; then
-            echo "📤 Unregistering NGINX.NGINXPLUS..."
-            az provider unregister --namespace NGINX.NGINXPLUS --wait || true
+          if [ -n "$GRAFANA_RESOURCE_ID" ]; then
+            echo "🔍 Deleting Grafana resource $GRAFANA_RESOURCE_ID..."
+            az resource delete --ids $GRAFANA_RESOURCE_ID || echo "Failed to delete Grafana resource, continuing..."
           else
-            echo "✅ NGINX provider already unregistered or not found."
+            echo "No Grafana resource found to delete."
           fi
 
-      - name: Final Cleanup Verification
-        if: always()
+      - name: Delete Resource Group (No Wait)
         run: |
-          echo "🔁 Verifying cleanup..."
-          state=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "Not Found")
+          RG_NAME="${{ vars.project_prefix }}-rg"
+          echo "Deleting resource group $RG_NAME..."
+          az group delete --name $RG_NAME --yes --no-wait || echo "Resource group delete command failed or group already deleted."
 
-          if [[ "$state" == "Registered" || "$state" == "Unregistering" ]]; then
-            echo "::error::NGINX provider is still registered or in the process of unregistering."
-            exit 1
+      - name: Unregister NGINX Resource Provider (Optional)
+        run: |
+          echo "Checking NGINX.NGINXPLUS provider registration state..."
+          STATE=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "NotFound")
+          if [[ "$STATE" == "Registered" ]]; then
+            echo "Unregistering NGINX.NGINXPLUS provider..."
+            az provider unregister --namespace NGINX.NGINXPLUS --wait || echo "Provider unregister failed or timed out."
+          else
+            echo "NGINX provider already unregistered or not found."
           fi
 
-          echo "✅ Final verification complete. All resources cleaned up."
