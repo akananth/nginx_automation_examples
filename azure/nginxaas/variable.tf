@@ -24,8 +24,7 @@ variable "resource_group_name" {
 }
 
 variable "grafana_viewer_emails" {
-  type        = list(string)
-  description = "List of Azure AD user emails to assign Grafana Viewer role"
+  type = list(string)
 }
 
 

@@ -1,4 +1,4 @@
-name: 'Apply NGINXaaS WAF Deployment with Grafana'
+name: Apply NGINXaaS WAF Deployment with Grafana
 
 on:
   push:
@@ -13,11 +13,6 @@ jobs:
     defaults:
       run:
         working-directory: ./azure/nginxaas
-
-    outputs:
-      grafana_name: ${{ steps.outputs.outputs.grafana_name }}
-      resource_group_name: ${{ steps.outputs.outputs.resource_group_name }}
-      grafana_url: ${{ steps.outputs.outputs.grafana_url }}
 
     steps:
       - name: Checkout code
@@ -35,24 +30,9 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        env:
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
 
       - name: Terraform Validate
         run: terraform validate
-
-      - name: Set Azure Region
-        id: set-region
-        run: |
-          REGION="${{ vars.azure_region }}"
-          if [ -z "$REGION" ]; then REGION="eastus2"; fi
-          echo "region=$REGION" >> $GITHUB_OUTPUT
-
-      - name: Get User Object ID
-        id: get_user
-        run: |
-          USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
-          echo "user_object_id=$USER_OBJECT_ID" >> $GITHUB_OUTPUT
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
@@ -61,12 +41,14 @@ jobs:
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
           TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
-          TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
+          TF_VAR_azure_region: ${{ vars.azure_region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          # Pass your emails here if you want from secrets or vars:
+          # TF_VAR_grafana_viewer_emails: '["your.email@domain.com"]'
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
@@ -75,12 +57,13 @@ jobs:
           TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
+          TF_VAR_azure_region: ${{ vars.azure_region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
+          # TF_VAR_grafana_viewer_emails: '["your.email@domain.com"]'
 
       - name: Extract Terraform Outputs
         id: outputs

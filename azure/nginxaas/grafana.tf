@@ -1,8 +1,34 @@
-# Lookup Azure AD users by email
-data "azuread_user" "grafana_users" {
-  for_each             = toset(var.grafana_viewer_emails)
-  user_principal_name  = each.key
+
+# Create Grafana instance
+resource "azurerm_dashboard_grafana" "grafana" {
+  name                = "${var.project_prefix}-grafana"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  sku                   = "Standard"
+  grafana_major_version = "11"
 }
+
+# Lookup Azure AD users by email
+data "azuread_user" "grafana_viewers" {
+  for_each            = toset(var.grafana_viewer_emails)
+  user_principal_name = each.value
+}
+
+resource "azurerm_role_assignment" "grafana_viewer" {
+  for_each = data.azuread_user.grafana_viewers
+
+  scope              = azurerm_dashboard_grafana.grafana.id
+  role_definition_id = data.azurerm_role_definition.grafana_viewer.id
+  principal_id       = each.value.object_id
+
+  depends_on = [azurerm_dashboard_grafana.grafana]
+}
+
 
 # Create Azure AD Group for Grafana Viewers
 resource "azuread_group" "grafana_viewers" {
@@ -27,19 +53,6 @@ data "azurerm_role_definition" "grafana_viewer" {
   scope = data.azurerm_subscription.current.id
 }
 
-# Create Grafana instance
-resource "azurerm_dashboard_grafana" "grafana" {
-  name                = "${var.project_prefix}-grafana"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  sku                   = "Standard"
-  grafana_major_version = "11"
-}
 
 # Assign Grafana Viewer role to the group
 resource "azurerm_role_assignment" "grafana_viewer_assignment" {
