@@ -44,14 +44,13 @@ output "vm_ids" {
 }
 
 output "grafana_name" {
-  description = "The name of the Azure Managed Grafana resource"
-  value       = azurerm_dashboard_grafana.this.name
+  value = azurerm_dashboard_grafana.grafana.name
 }
 
 output "grafana_url" {
-  description = "The public endpoint of the Grafana dashboard"
-  value       = azurerm_dashboard_grafana.this.endpoint
+  value = azurerm_dashboard_grafana.grafana.endpoint
 }
+
 
 output "log_analytics_workspace_name" {
   description = "Name of the Log Analytics Workspace"
