@@ -15,8 +15,8 @@ jobs:
         working-directory: ./azure/nginxaas
 
     outputs:
-      grafana_name: ${{ steps.outputs.outputs.grafana_name }}
-      resource_group_name: ${{ steps.outputs.outputs.resource_group_name }}
+      grafana_name: ${{ steps.outputs.grafana_name }}
+      resource_group_name: ${{ steps.outputs.resource_group_name }}
 
     steps:
       - name: Checkout code
@@ -60,7 +60,6 @@ jobs:
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
-
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
         env:
@@ -73,13 +72,14 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-  
 
       - name: Extract Terraform Outputs
         id: outputs
         run: |
-          echo "grafana_name=$(terraform output -raw grafana_name)" >> $GITHUB_OUTPUT
-          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+          grafana_name=$(terraform output -raw grafana_name | tr -d '\r\n')
+          resource_group_name=$(terraform output -raw resource_group_name | tr -d '\r\n')
+          echo "grafana_name=$grafana_name" >> $GITHUB_OUTPUT
+          echo "resource_group_name=$resource_group_name" >> $GITHUB_OUTPUT
 
   grafana:
     name: 'Grafana Role Assignment & Dashboard Import'
@@ -107,7 +107,7 @@ jobs:
           az grafana service-account create \
             --name "${{ needs.terraform.outputs.grafana_name }}" \
             --service-account tf-sa \
-            --role Editor \
+            --role Admin \       # <-- Use Admin role here for full permissions
             --resource-group "${{ needs.terraform.outputs.resource_group_name }}"
 
       - name: Create Service Account Token
