@@ -21,11 +21,6 @@ terraform {
   }
 }
 
-provider "azurerm" {
-  features {}
-  subscription_id = var.subscription_id
-}
-
 # Add AzureAD provider configuration
 provider "azuread" {
   # Use Azure CLI authentication (same as azurerm)
