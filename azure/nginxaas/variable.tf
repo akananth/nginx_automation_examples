@@ -22,10 +22,12 @@ variable "resource_group_name" {
   type        = string
   description = "Azure Resource group name"
 }
-variable "grafana_user_email" {
-  type        = string
-  description = "Email address of the user to grant Grafana Viewer access"
+
+variable "grafana_viewer_emails" {
+  type        = list(string)
+  description = "List of Azure AD user emails to assign Grafana Viewer role"
 }
+
 
 variable "sku" {
   type        = string
