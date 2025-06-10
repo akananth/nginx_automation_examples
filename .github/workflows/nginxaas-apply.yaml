@@ -53,6 +53,7 @@ jobs:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
+          TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
           TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
@@ -64,6 +65,7 @@ jobs:
         run: terraform apply -input=false -auto-approve
         env:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+          TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
           TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
