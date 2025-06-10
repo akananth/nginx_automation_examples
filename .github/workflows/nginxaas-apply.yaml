@@ -23,13 +23,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Get Signed-In User Object ID
-        id: get_user
-        run: |
-         OBJECT_ID=$(az ad signed-in-user show --query objectId -o tsv)
-         echo "Azure AD Object ID: $OBJECT_ID"
-         echo "TF_VAR_grafana_viewer_object_ids=[\"$OBJECT_ID\"]" >> $GITHUB_ENV
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -73,7 +66,6 @@ jobs:
           TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-          # TF_VAR_grafana_viewer_emails: '["your.email@domain.com"]'
 
       - name: Extract Terraform Outputs
         id: outputs
