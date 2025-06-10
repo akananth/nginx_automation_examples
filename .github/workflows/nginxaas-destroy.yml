@@ -32,6 +32,7 @@ jobs:
         run: terraform init
         env:
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
+          
 
       - name: Terraform Destroy (Best Effort)
         run: |
@@ -41,14 +42,12 @@ jobs:
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region || 'eastus2' }}
-          TF_VAR_resource_group_name: ${{ vars.project_prefix }}-rg
+          TF_VAR_azure_region: ${{ steps.set-region.outputs.region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
+          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
           TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-          TF_VAR_nginx_jwt: ${{ secrets.nginx_jwt }}
-          TF_VAR_principal_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
 
       - name: Force Delete Resource Group If Needed
         if: always()
@@ -78,13 +77,13 @@ jobs:
           RG_NAME="${{ vars.project_prefix }}-rg"
           echo "⏳ Waiting for resource group $RG_NAME to be deleted..."
 
-          for i in {1..18}; do
+          for i in {1..24}; do
             sleep 10
             if ! az group exists --name "$RG_NAME" | grep -q true; then
               echo "✅ Resource group $RG_NAME successfully deleted."
               exit 0
             fi
-            echo "⌛ Still deleting... ($i/18)"
+            echo "⌛ Still deleting... ($i/24)"
           done
 
           echo "::error::Resource group $RG_NAME still exists after waiting."
