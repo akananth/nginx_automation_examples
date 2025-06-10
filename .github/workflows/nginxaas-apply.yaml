@@ -15,8 +15,9 @@ jobs:
         working-directory: ./azure/nginxaas
 
     outputs:
-      grafana_name: ${{ steps.outputs.grafana_name }}
-      resource_group_name: ${{ steps.outputs.resource_group_name }}
+      grafana_name: ${{ steps.outputs.outputs.grafana_name }}
+      resource_group_name: ${{ steps.outputs.outputs.resource_group_name }}
+      grafana_url: ${{ steps.outputs.outputs.grafana_url }}
 
     steps:
       - name: Checkout code
@@ -47,10 +48,15 @@ jobs:
           if [ -z "$REGION" ]; then REGION="eastus2"; fi
           echo "region=$REGION" >> $GITHUB_OUTPUT
 
+      - name: Get User Object ID
+        id: get_user
+        run: |
+          USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
+          echo "user_object_id=$USER_OBJECT_ID" >> $GITHUB_OUTPUT
+
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
-          TF_VAR_grafana_user_object_id: ${{ secrets.GRAFANA_USER_OBJECT_ID }}
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
@@ -63,9 +69,8 @@ jobs:
           TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
       - name: Terraform Apply
-        run: terraform apply -input=false -auto-approve
+        run: terraform apply -input=false -auto-approve tfplan
         env:
-          TF_VAR_grafana_user_object_id: ${{ secrets.GRAFANA_USER_OBJECT_ID }}
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
@@ -82,8 +87,10 @@ jobs:
         run: |
           grafana_name=$(terraform output -raw grafana_name | tr -d '\r\n')
           resource_group_name=$(terraform output -raw resource_group_name | tr -d '\r\n')
+          grafana_url=$(terraform output -raw grafana_url | tr -d '\r\n')
           echo "grafana_name=$grafana_name" >> $GITHUB_OUTPUT
           echo "resource_group_name=$resource_group_name" >> $GITHUB_OUTPUT
+          echo "grafana_url=$grafana_url" >> $GITHUB_OUTPUT
 
   grafana:
     name: 'Configure Grafana'
@@ -101,19 +108,13 @@ jobs:
 
       - name: Upgrade Azure CLI and AMG extension
         run: |
-          echo "Upgrading Azure CLI..."
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl apt-transport-https lsb-release gnupg
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-          echo "Removing old AMG extension (if any)..."
           az extension remove --name amg || true
-          echo "Adding latest AMG extension..."
-          az extension add --name amg
-          echo "Enabling preview extension installs..."
-          az config set extension.dynamic_install=yes_without_prompt
-          az config set extension.dynamic_install_allow_preview=true
-          echo "Verify versions"
-          az version
-          az extension list
-          
+          az extension add --name amg --yes
+          az config set extension.use_dynamic_install=yes_without_prompt
+
       - name: Enable Grafana Service Account
         run: |
           az grafana update \
@@ -125,25 +126,32 @@ jobs:
         run: |
           az grafana service-account create \
             --name "${{ needs.terraform.outputs.grafana_name }}" \
+            --resource-group "${{ needs.terraform.outputs.resource_group_name }}" \
             --service-account tf-sa \
-            --role Admin \       # <-- Use Admin role here for full permissions
-            --resource-group "${{ needs.terraform.outputs.resource_group_name }}"
+            --role Admin \
+            --display-name "Terraform Service Account"
 
       - name: Create Service Account Token
         run: |
-          az grafana service-account token create \
+          TOKEN=$(az grafana service-account token create \
             --name "${{ needs.terraform.outputs.grafana_name }}" \
+            --resource-group "${{ needs.terraform.outputs.resource_group_name }}" \
             --service-account tf-sa \
             --token tf-token \
-            --query token -o tsv > token.txt
+            --time-to-live 8760h \
+            --query token -o tsv)
+          echo "::add-mask::$TOKEN"
+          echo "GRAFANA_TOKEN=$TOKEN" >> $GITHUB_ENV
 
       - name: Import Grafana Dashboard
         run: |
-          GRAFANA_NAME="${{ needs.terraform.outputs.grafana_name }}"
-          RG="${{ needs.terraform.outputs.resource_group_name }}"
-          TOKEN=$(cat token.txt)
           az grafana dashboard import \
-            --name "$GRAFANA_NAME" \
-            --resource-group "$RG" \
+            --name "${{ needs.terraform.outputs.grafana_name }}" \
+            --resource-group "${{ needs.terraform.outputs.resource_group_name }}" \
             --definition "@./azure/nginxaas/n4-dashboard.json" \
-            --token "$TOKEN"
+            --token "$GRAFANA_TOKEN"
+
+      - name: Verify Grafana Access
+        run: |
+          echo "Grafana URL: ${{ needs.terraform.outputs.grafana_url }}"
+          echo "Try accessing Grafana with your Azure AD credentials"
