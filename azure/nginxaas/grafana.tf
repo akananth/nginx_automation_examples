@@ -1,8 +1,3 @@
-# grafana.tf
-data "azurerm_resource_group" "rg" {
-  name = local.resource_group_name
-}
-
 data "azurerm_role_definition" "grafana_admin" {
   name  = "Grafana Admin"
   scope = "/subscriptions/${var.subscription_id}"
@@ -10,8 +5,8 @@ data "azurerm_role_definition" "grafana_admin" {
 
 resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.project_prefix}-grafana"
-  location            = data.azurerm_resource_group.rg.location
-  resource_group_name = data.azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
 
   identity {
     type = "SystemAssigned"
