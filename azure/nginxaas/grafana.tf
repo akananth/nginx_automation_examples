@@ -14,9 +14,9 @@ resource "azurerm_dashboard_grafana" "this" {
 }
 
 resource "azurerm_role_assignment" "grafana_viewer" {
-  scope                = azurerm_dashboard_grafana.this.id
-  role_definition_name = "Grafana Viewer" # or "Grafana Admin", "Grafana Editor"
-  principal_id         = var.grafana_user_object_id
+  scope                = azurerm_dashboard_grafana.main.id
+  role_definition_name = "Grafana Viewer"
+  principal_id         = azurerm_user_assigned_identity.main.principal_id
 
   depends_on = [
     azurerm_dashboard_grafana.this
