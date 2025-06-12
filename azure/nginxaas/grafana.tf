@@ -33,24 +33,34 @@ resource "azurerm_role_assignment" "grafana_viewer" {
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
 
+# ✅ Assign Grafana Viewer role to the Grafana instance's system-assigned identity
+resource "azurerm_role_assignment" "grafana_viewer_app" {
+  scope              = azurerm_dashboard_grafana.grafana.id
+  role_definition_id = data.azurerm_role_definition.grafana_viewer.id
+  principal_id       = azurerm_dashboard_grafana.grafana.identity[0].principal_id
+
+  depends_on = [azurerm_dashboard_grafana.grafana]
+}
+
 # Upload dashboard.json to Grafana
 resource "null_resource" "import_grafana_dashboard" {
   triggers = {
-    dashboard_sha = filesha1("${path.module}/n4-dashboard.json") # Re-run if dashboard changes
+    dashboard_sha = filesha1("${path.module}/dashboard.json") # Re-run if dashboard changes
     grafana_id    = azurerm_dashboard_grafana.grafana.id
   }
 
-  provisioner "local-exec" {
-    command = <<EOT
+    provisioner "local-exec" {
+    command = <<-EOT
       az grafana dashboard import \
-        --name ${azurerm_dashboard_grafana.grafana.name} \
-        --resource-group ${azurerm_dashboard_grafana.grafana.resource_group_name} \
-        --definition @${path.module}/dashboard.json
+        --name "${azurerm_dashboard_grafana.grafana.name}" \
+        --resource-group "${azurerm_dashboard_grafana.grafana.resource_group_name}" \
+        --definition @"${path.module}/dashboard.json"
     EOT
   }
 
   depends_on = [
     azurerm_dashboard_grafana.grafana,
     azurerm_role_assignment.grafana_viewer
+    azurerm_role_assignment.grafana_viewer_app
   ]
 }
