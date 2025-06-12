@@ -60,7 +60,7 @@ resource "null_resource" "import_grafana_dashboard" {
 
   depends_on = [
     azurerm_dashboard_grafana.grafana,
-    azurerm_role_assignment.grafana_viewer
+    azurerm_role_assignment.grafana_viewer,
     azurerm_role_assignment.grafana_viewer_app
   ]
 }
