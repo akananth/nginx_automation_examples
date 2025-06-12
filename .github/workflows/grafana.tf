@@ -6,82 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform:
-    name: 'Deploy NGINXaaS WAF & Grafana'
-    runs-on: ubuntu-latest
-    environment: production
-    defaults:
-      run:
-        working-directory: ./azure/nginxaas
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.3.0
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      
-
-      - name: Terraform Plan
-        run: terraform plan -input=false -out=tfplan
-        env:
-          TF_VAR_grafana_viewer_object_ids: ${{ env.TF_VAR_grafana_viewer_object_ids }}
-          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
-          TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
-          TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
-          TF_VAR_azure_region: ${{ vars.azure_region }}
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
-          TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
-          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
-          TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
-          TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-
-
-      - name: Terraform Apply
-        run: terraform apply -input=false -auto-approve tfplan
-        env:
-          TF_VAR_grafana_viewer_object_ids: ${{ env.TF_VAR_grafana_viewer_object_ids }}
-          TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
-          TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
-          TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
-          TF_VAR_project_prefix: ${{ vars.project_prefix }}
-          TF_VAR_azure_region: ${{ vars.azure_region }}
-          TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
-          TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
-          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
-          TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
-          TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
-
-      - name: Extract Terraform Outputs
-        id: outputs
-        run: |
-          grafana_name=$(terraform output -raw grafana_name | tr -d '\r\n')
-          resource_group_name=$(terraform output -raw resource_group_name | tr -d '\r\n')
-          grafana_url=$(terraform output -raw grafana_url | tr -d '\r\n')
-          echo "grafana_name=$grafana_name" >> $GITHUB_OUTPUT
-          echo "resource_group_name=$resource_group_name" >> $GITHUB_OUTPUT
-          echo "grafana_url=$grafana_url" >> $GITHUB_OUTPUT
-
   grafana:
     name: 'Configure Grafana'
     runs-on: ubuntu-latest
-    needs: terraform
-
+    defaults:
+      run:
+        working-directory: ./azure/nginxaas
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
