@@ -41,7 +41,7 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
-          TF_VAR_grafana_viewer_object_ids: ${{ env.TF_VAR_grafana_viewer_object_ids }}
+          TF_VAR_grafana_admin_object_ids: ${{ env.TF_VAR_grafana_admin_object_ids }}
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
           TF_VAR_project_prefix: ${{ vars.project_prefix }}
@@ -60,7 +60,7 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
         env:
-          TF_VAR_grafana_viewer_object_ids: ${{ env.TF_VAR_grafana_viewer_object_ids }}
+          TF_VAR_grafana_admin_object_ids: ${{ env.TF_VAR_grafana_admin_object_ids }}
           TF_VAR_subscription_id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           TF_VAR_resource_group_name: ${{ vars.resource_group_name }}
           TF_VAR_admin_ip: ${{ secrets.ADMIN_IP }}
@@ -83,3 +83,4 @@ jobs:
           echo "grafana_url=$grafana_url" >> $GITHUB_OUTPUT
 
   
+
