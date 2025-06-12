@@ -1,3 +1,18 @@
+# Get current subscription (needed for scoping role assignments)
+data "azurerm_subscription" "current" {}
+
+# Get role definition for Grafana Admin
+data "azurerm_role_definition" "grafana_admin" {
+  name  = "Grafana Admin"
+  scope = data.azurerm_subscription.current.id
+}
+
+# Get role definition for Monitoring Reader
+data "azurerm_role_definition" "monitoring_reader" {
+  name  = "Monitoring Reader"
+  scope = data.azurerm_subscription.current.id
+}
+
 # Create Grafana instance
 resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.project_prefix}-grafana"
@@ -12,18 +27,9 @@ resource "azurerm_dashboard_grafana" "grafana" {
   grafana_major_version = "11"
 }
 
-# Get current subscription (needed for role scope)
-data "azurerm_subscription" "current" {}
-
-# Lookup role definition ID for "Grafana Admin"
-data "azurerm_role_definition" "grafana_admin" {
-  name  = "Grafana Admin"
-  scope = data.azurerm_subscription.current.id
-}
-
-# Assign Grafana Admin role to each provided Object ID
+# Assign Grafana Admin role to each provided user
 resource "azurerm_role_assignment" "grafana_admin_users" {
-  for_each = toset(var.grafana_viewer_object_ids)
+  for_each = toset(var.grafana_admin_object_ids)
 
   scope              = azurerm_dashboard_grafana.grafana.id
   role_definition_id = data.azurerm_role_definition.grafana_admin.id
@@ -32,7 +38,7 @@ resource "azurerm_role_assignment" "grafana_admin_users" {
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
 
-# ✅ Assign Grafana Admin role to the Grafana instance's system-assigned identity
+# Assign Grafana Admin role to Grafana's system-assigned identity
 resource "azurerm_role_assignment" "grafana_admin_app" {
   scope              = azurerm_dashboard_grafana.grafana.id
   role_definition_id = data.azurerm_role_definition.grafana_admin.id
@@ -41,25 +47,14 @@ resource "azurerm_role_assignment" "grafana_admin_app" {
   depends_on = [azurerm_dashboard_grafana.grafana]
 }
 
-# Upload dashboard.json to Grafana
-resource "null_resource" "import_grafana_dashboard" {
-  triggers = {
-    dashboard_sha = filesha1("${path.module}/dashboard.json")
-    grafana_id    = azurerm_dashboard_grafana.grafana.id
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      az grafana dashboard import \
-        --name "${azurerm_dashboard_grafana.grafana.name}" \
-        --resource-group "${azurerm_dashboard_grafana.grafana.resource_group_name}" \
-        --definition @"${path.module}/dashboard.json"
-    EOT
-  }
+# Assign Monitoring Reader role to Grafana for accessing NGINX metrics
+resource "azurerm_role_assignment" "grafana_monitoring_reader" {
+  scope              = azurerm_nginx_deployment.main.id
+  role_definition_id = data.azurerm_role_definition.monitoring_reader.id
+  principal_id       = azurerm_dashboard_grafana.grafana.identity[0].principal_id
 
   depends_on = [
     azurerm_dashboard_grafana.grafana,
-    azurerm_role_assignment.grafana_admin_users,
-    azurerm_role_assignment.grafana_admin_app
+    azurerm_nginx_deployment.main
   ]
 }

@@ -32,7 +32,7 @@
       },
       "id": 10,
       "panels": [],
-      "title": "NGINXaaS - ${var.project_prefix}",
+      "title": "NGINXaaS-Metrics",
       "type极": "row"
     },
     {
@@ -106,7 +106,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -138,11 +138,11 @@
             "dimensionFilters": [],
             "metricName": "ncu.requested",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": ""eastus2",",
+            "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
-                "region": ""eastus2",",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
+                "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
               }
@@ -174,11 +174,11 @@
             "dimensionFilters": [],
             "metricName": "ncu.consumed",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": ""eastus2",",
+            "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
-                "region": ""eastus2",",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
+                "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
               }
@@ -266,11 +266,11 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.accepted",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": ""eastus2",",
+            "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
-                "region": ""eastus2",",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
+                "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
               }
@@ -303,10 +303,10 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.dropped",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": ""eastus2",",
+            "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -378,7 +378,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -414,7 +414,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -504,7 +504,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -539,7 +539,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -575,7 +575,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -611,7 +611,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -647,7 +647,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -683,7 +683,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -809,7 +809,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -929,7 +929,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -964,7 +964,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1000,7 +1000,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1126,7 +1126,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1161,7 +1161,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1197,7 +1197,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1233,10 +1233,10 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
-                "resourceName": "${var.project_prefix}-grafana"
+                "resourceName": "akash-deploy"
               }
             ],
             "timeGrain": "auto"
@@ -1323,7 +1323,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1358,7 +1358,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1394,7 +1394,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1430,7 +1430,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1466,7 +1466,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1502,7 +1502,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1628,7 +1628,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1748,7 +1748,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1783,7 +1783,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1819,7 +1819,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1855,7 +1855,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1945,7 +1945,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -1980,7 +1980,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2016,7 +2016,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2052,7 +2052,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2088,7 +2088,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2124,7 +2124,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2160,7 +2160,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2286,7 +2286,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2327,7 +2327,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2369,7 +2369,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2497,7 +2497,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2622,7 +2622,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2663,7 +2663,7 @@
             "region": "eastus2",
             "resources": [
               {
-                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "metricNamespace": "nginx.nginxplus/nginxdeployments",
                 "region": "eastus2",
                 "resourceGroup": "akash-rg",
                 "resourceName":"akash-deploy"
@@ -2691,286 +2691,316 @@
         "x": 0,
         "y": 38
       },
-      "id": 27,
-      "panels": [],
-      "title": "Virtual Machines",
-      "type": "row"
+    "id": 27,
+  "panels": [],
+  "title": "Virtual Machines",
+  "type": "row"
+},
+{
+  "datasource": {
+    "type": "grafana-azure-monitor-datasource",
+    "uid": "azure-monitor-oob"
+  },
+  "fieldConfig": {
+    "defaults": {
+      "color": {
+        "mode": "continuous-GrYlRd"
+      },
+      "custom": {
+        "axisBorderShow": false,
+        "axisCenteredZero": false,
+        "axisColorMode": "text",
+        "axisLabel": "",
+        "axisPlacement": "auto",
+        "barAlignment": 0,
+        "drawStyle": "line",
+        "fillOpacity": 20,
+        "gradientMode": "scheme",
+        "hideFrom": {
+          "legend": false,
+          "tooltip": false,
+          "viz": false
+        },
+        "insertNulls": false,
+        "lineInterpolation": "smooth",
+        "lineWidth": 3,
+        "pointSize": 5,
+        "scaleDistribution": {
+          "type": "linear"
+        },
+        "showPoints": "auto",
+        "spanNulls": false,
+        "stacking": {
+          "group": "A",
+          "mode": "none"
+        },
+        "thresholdsStyle": {
+          "mode": "off"
+        }
+      },
+      "mappings": [],
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "green"
+          },
+          {
+            "color": "red",
+            "value": 80
+          }
+        ]
+      }
     },
+    "overrides": []
+  },
+  "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 39
+  },
+  "id": 28,
+  "options": {
+    "legend": {
+      "calcs": [],
+      "displayMode": "list",
+      "placement": "bottom",
+      "showLegend": true
+    },
+    "tooltip": {
+      "mode": "single",
+      "sort": "none"
+    }
+  },
+  "repeat": "vm",
+  "repeatDirection": "h",
+  "targets": [
     {
+      "azureMonitor": {
+        "aggregation": "Average",
+        "alias": "Inbound Flows - ${{__value.resourceName}}",
+        "dimensionFilters": [],
+        "metricName": "Inbound Flows",
+        "metricNamespace": "microsoft.compute/virtualmachines",
+        "region": "eastus2",
+        "resources": [
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm1"
+          },
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm2"
+          }
+        ],
+        "timeGrain": "auto"
+      },
       "datasource": {
         "type": "grafana-azure-monitor-datasource",
         "uid": "azure-monitor-oob"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "scheme",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 3,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 39
-      },
-      "id": 28,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "repeat": "vm",
-      "repeatDirection": "h",
-      "targets": [
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "alias": "Inbound Flows - ${{__value.resourceName}}",
-            "dimensionFilters": [],
-            "metricName": "Inbound Flows",
-            "metricNamespace": "microsoft.compute/virtualmachines",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "Microsoft.Compute/virtualMachines",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName": "akash-vm1"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "A"
-        }
-      ],
-      "title": "Inbound Flows",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "orange",
-                "value": 70
-              },
-              {
-                "color": "red",
-                "value": 85
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 47
-      },
-      "id": 29,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "10.4.1",
-      "repeat": "vm",
-      "repeatDirection": "h",
-      "targets": [
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "alias": "Disk Read - ${{__value.resourceName}}",
-            "dimensionFilters": [],
-            "metricName": "Disk Read Bytes",
-            "metricNamespace": "microsoft.compute/virtualmachines",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "Microsoft.Compute/virtualMachines",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName": "akash-vm1"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "A"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Total",
-            "alias": "Disk Write - ${{__value.resourceName}}",
-            "dimensionFilters": [],
-            "metricName": "Disk Write Bytes",
-            "metricNamespace": "microsoft.compute/virtualmachines",
-            "region": "eastus2",
-            "resources极": [
-              {
-                "metricNamespace": "Microsoft.Compute/virtualMachines",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName": "akash-vm1"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "B"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Count",
-            "alias": "CPU % - ${{__value.resourceName}}",
-            "dimensionFilters": [],
-            "metricName": "Percentage CPU",
-            "metricNamespace": "microsoft.compute/virtualmachines",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "Microsoft.Compute/virtualMachines",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName": "akash-vm1"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "C"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Total",
-            "alias": "Available Memory - ${{__value.resourceName}}",
-            "dimensionFilters": [],
-            "metricName": "Available Memory Bytes",
-            "metricNamespace": "microsoft.compute/virtualmachines",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "Microsoft.Compute/virtualMachines",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName": "akash-vm1"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "D"
-        }
-      ],
-      "title": "System Metrics",
-      "type": "gauge"
+      "queryType": "Azure Monitor",
+      "refId": "A"
     }
   ],
-  "refresh": "5s",
+  "title": "Inbound Flows",
+  "type": "timeseries"
+},
+{
+  "datasource": {
+    "type": "grafana-azure-monitor-datasource",
+    "uid": "azure-monitor-oob"
+  },
+  "fieldConfig": {
+    "defaults": {
+      "mappings": [],
+      "thresholds": {
+        "mode": "percentage",
+        "steps": [
+          {
+            "color": "green"
+          },
+          {
+            "color": "orange",
+            "value": 70
+          },
+          {
+            "color": "red",
+            "value": 85
+          }
+        ]
+      }
+    },
+    "overrides": []
+  },
+  "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 47
+  },
+  "id": 29,
+  "options": {
+    "minVizHeight": 75,
+    "minVizWidth": 75,
+    "orientation": "auto",
+    "reduceOptions": {
+      "calcs": [
+        "lastNotNull"
+      ],
+      "fields": "",
+      "values": false
+    },
+    "showThresholdLabels": false,
+    "showThresholdMarkers": true,
+    "sizing": "auto"
+  },
+  "pluginVersion": "10.4.1",
+  "repeat": "vm",
+  "repeatDirection": "h",
+  "targets": [
+    {
+      "azureMonitor": {
+        "aggregation": "Average",
+        "alias": "Disk Read - ${{__value.resourceName}}",
+        "dimensionFilters": [],
+        "metricName": "Disk Read Bytes",
+        "metricNamespace": "microsoft.compute/virtualmachines",
+        "region": "eastus2",
+        "resources": [
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm1"
+          },
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm2"
+          }
+        ],
+        "timeGrain": "auto"
+      },
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "azure-monitor-oob"
+      },
+      "queryType": "Azure Monitor",
+      "refId": "A"
+    },
+    {
+      "azureMonitor": {
+        "aggregation": "Total",
+        "alias": "Disk Write - ${{__value.resourceName}}",
+        "dimensionFilters": [],
+        "metricName": "Disk Write Bytes",
+        "metricNamespace": "microsoft.compute/virtualmachines",
+        "region": "eastus2",
+        "resources": [
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm1"
+          },
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm2"
+          }
+        ],
+        "timeGrain": "auto"
+      },
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "azure-monitor-oob"
+      },
+      "queryType": "Azure Monitor",
+      "refId": "B"
+    },
+    {
+      "azureMonitor": {
+        "aggregation": "Count",
+        "alias": "CPU % - ${{__value.resourceName}}",
+        "dimensionFilters": [],
+        "metricName": "Percentage CPU",
+        "metricNamespace": "microsoft.compute/virtualmachines",
+        "region": "eastus2",
+        "resources": [
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm1"
+          },
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm2"
+          }
+        ],
+        "timeGrain": "auto"
+      },
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "azure-monitor-oob"
+      },
+      "queryType": "Azure Monitor",
+      "refId": "C"
+    },
+    {
+      "azureMonitor": {
+        "aggregation": "Total",
+        "alias": "Available Memory - ${{__value.resourceName}}",
+        "dimensionFilters": [],
+        "metricName": "Available Memory Bytes",
+        "metricNamespace": "microsoft.compute/virtualmachines",
+        "region": "eastus2",
+        "resources": [
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm1"
+          },
+          {
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "eastus2",
+            "resourceGroup": "akash-rg",
+            "resourceName": "akash-vm2"
+          }
+        ],
+        "timeGrain": "auto"
+      },
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "azure-monitor-oob"
+      },
+      "queryType": "Azure Monitor",
+      "refId": "D"
+    }
+  ],
+  "title": "System Metrics",
+  "type": "gauge"
+}
+  ],
+  "refresh": "1m",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
       {
         "name": "vm",
-        "label": "Virtual Machine",
+        "label": "Virtual Machines",
         "type": "query",
         "datasource": {
           "type": "grafana-azure-monitor-datasource",
