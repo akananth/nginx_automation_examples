@@ -1,8 +1,18 @@
+locals {
+  resource_group_name = var.resource_group_name != "" ? var.resource_group_name : "${var.project_prefix}-rg"
+}
+
+resource "azurerm_resource_group" "main" {
+  name     = local.resource_group_name
+  location = var.azure_region
+  tags     = var.tags
+}
+
 resource "null_resource" "validate_admin_ip" {
   provisioner "local-exec" {
     command = <<EOT
       if [ -z "${var.admin_ip}" ]; then
-        echo "admin_ip set for NSG for vm's"
+        echo "admin_ip must be set for NSG for VM's"
         exit 1
       fi
     EOT
@@ -25,8 +35,10 @@ resource "time_sleep" "wait_1_minutes" {
 resource "azurerm_user_assigned_identity" "main" {
   name                = "${var.project_prefix}-identity"
   location            = var.azure_region
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.main.name
   tags                = var.tags
+
+  depends_on = [azurerm_resource_group.main]
 }
 
 resource "azurerm_role_assignment" "contributor" {
@@ -50,7 +62,7 @@ resource "azurerm_nginx_deployment" "main" {
   ]
 
   name                      = substr("${var.project_prefix}-deploy", 0, 40)
-  resource_group_name       = local.resource_group_name
+  resource_group_name       = azurerm_resource_group.main.name
   location                  = var.azure_region
   sku                       = var.sku
   capacity                  = var.capacity

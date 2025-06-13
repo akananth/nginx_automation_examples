@@ -1,13 +1,3 @@
-locals {
-  resource_group_name = var.resource_group_name != "" ? var.resource_group_name : "${var.project_prefix}-rg"
-}
-
-resource "azurerm_resource_group" "main" {
-  name     = local.resource_group_name
-  location = var.azure_region
-  tags     = var.tags
-}
-
 resource "azurerm_virtual_network" "main" {
   name                = "${var.project_prefix}-vnet"
   address_space       = var.address_space

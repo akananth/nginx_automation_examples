@@ -8,7 +8,7 @@ terraform {
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.45.0"  # Added AzureAD provider
+      version = "~> 2.45.0"
     }
     http = {
       source  = "hashicorp/http"
@@ -21,9 +21,7 @@ terraform {
   }
 }
 
-# Add AzureAD provider configuration
 provider "azuread" {
-  # Use Azure CLI authentication (same as azurerm)
   use_cli = true
 }
 
