@@ -33,7 +33,7 @@
       "id": 10,
       "panels": [],
       "title": "NGINXaaS-Metrics",
-      "type极": "row"
+      "type": "row"
     },
     {
       "datasource": {
@@ -103,13 +103,13 @@
             "dimensionFilters": [],
             "metricName": "ncu.provisioned",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -136,15 +136,15 @@
             ],
             "customNamespace": "nginxaas statistics",
             "dimensionFilters": [],
-            "metricName": "ncu.requested",
+            "metricName极": "ncu.requested",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -174,13 +174,13 @@
             "dimensionFilters": [],
             "metricName": "ncu.consumed",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -266,13 +266,13 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.accepted",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -303,13 +303,13 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.dropped",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto",
@@ -340,13 +340,13 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.active",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
-                "metricNamespace": "Nginx.NginxPlus/nginx极ployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "metricNamespace": "Nginx.NginxPlus/nginxdeployments",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -375,13 +375,13 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.idle",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -411,13 +411,13 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.current",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -501,13 +501,13 @@
             "dimensionFilters": [],
             "metricName": "plus.worker.conn.accepted",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -536,13 +536,13 @@
             "dimensionFilters": [],
             "metricName": "plus.worker.conn.dropped",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -572,13 +572,13 @@
             "dimensionFilters": [],
             "metricName": "plus.worker.conn.active",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -608,13 +608,13 @@
             "dimensionFilters": [],
             "metricName": "plus.worker.conn.idle",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -644,13 +644,13 @@
             "dimensionFilters": [],
             "metricName": "plus.worker.http.request.total",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -680,13 +680,13 @@
             "dimensionFilters": [],
             "metricName": "plus.worker.http.request.current",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -806,13 +806,13 @@
             ],
             "metricName": "plus.http.upstream.peers.response.time",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -926,13 +926,13 @@
             "dimensionFilters": [],
             "metricName": "plus.http.upstream.peers.status.2xx",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -961,13 +961,13 @@
             "dimensionFilters": [],
             "metricName": "plus.http.upstream.peers.status.3xx",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -997,13 +997,13 @@
             "dimensionFilters": [],
             "metricName": "plus.http.upstream.peers.status.4xx",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -1033,13 +1033,13 @@
             "dimensionFilters": [],
             "metricName": "plus.http.upstream.peers.status.5xx",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
-                "metricNamespace": "NGIN极.NGINXPLUS/nginxDeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "metricNamespace": "NGINX.NGINXPLUS/nginxDeployments",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -1050,7 +1050,7 @@
           },
           "hide": false,
           "queryType": "Azure Monitor",
-          "refId": "D"
+          "ref极": "D"
         }
       ],
       "title": "HTTP Metrics",
@@ -1123,13 +1123,13 @@
             "dimensionFilters": [],
             "metricName": "system.cpu",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -1158,13 +1158,13 @@
             "dimensionFilters": [],
             "metricName": "system.interface.bytes_rcvd",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -1194,13 +1194,13 @@
             "dimensionFilters": [],
             "metricName": "system.interface.bytes_sent",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -1230,13 +1230,13 @@
             "dimensionFilters": [],
             "metricName": "nginx.conn.current",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName": "akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -1251,933 +1251,6 @@
         }
       ],
       "title": "NGINX connections statistics",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 12,
-        "x": 12,
-        "y": 6
-      },
-      "id": 14,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.1",
-      "targets": [
-        {
-          "azureMonitor": {
-            "aggregation": "Count",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Worker Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.worker.conn.accepted",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "A"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Count",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Worker Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.worker.conn.dropped",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "B"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Worker Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.worker.conn.active",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "C"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Worker Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.worker.conn.idle",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "D"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Count",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Worker Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.worker.http.request.total",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "E"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Worker Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.worker.http.request.current",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "F"
-        }
-      ],
-      "title": "NGINX worker statistics",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 3,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 10
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Upstream Statistics",
-            "dimensionFilters": [
-              {
-                "dimension": "upstream",
-                "filters": [],
-                "operator": "eq"
-              }
-            ],
-            "metricName": "plus.http.upstream.peers.response.time",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "A"
-        }
-      ],
-      "title": "Upstream Response Time",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 10
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.4.1",
-      "targets": [
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Requests and Response Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.http.upstream.peers.status.2xx",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "A"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Requests and Response Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.http.upstream.peers.status.3xx",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "C"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Requests and Response Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.http.upstream.peers.status.4xx",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "B"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "NGINX Requests and Response Statistics",
-            "dimensionFilters": [],
-            "metricName": "plus.http.upstream.peers.status.5xx",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "D"
-        }
-      ],
-      "title": "HTTP Metrics",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 20
-      },
-      "id": 15,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "cal极": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.1",
-      "targets": [
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.cpu",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "queryType": "Azure Monitor",
-          "refId": "A"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.interface.bytes_rcvd",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "B"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.interface.bytes_sent",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "C"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.interface.packets_rcvd",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "D"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.interface.packets_sent",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "E"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Total",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.interface.total_bytes",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "F"
-        },
-        {
-          "azureMonitor": {
-            "aggregation": "Average",
-            "allowedTimeGrainsMs": [
-              60000,
-              300000,
-              900000,
-              1800000,
-              3600000,
-              21600000,
-              43200000,
-              86400000
-            ],
-            "customNamespace": "nginx system statistics",
-            "dimensionFilters": [],
-            "metricName": "system.interface.egress_throughput",
-            "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
-            "resources": [
-              {
-                "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
-              }
-            ],
-            "timeGrain": "auto"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "azure-monitor-oob"
-          },
-          "hide": false,
-          "queryType": "Azure Monitor",
-          "refId": "G"
-        }
-      ],
-      "title": "NGINX system statistics",
       "type": "stat"
     },
     {
@@ -2283,13 +1356,13 @@
             ],
             "metricName": "plus.ssl.handshakes",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -2324,13 +1397,13 @@
             ],
             "metricName": "plus.ssl.reuses",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -2366,13 +1439,13 @@
             ],
             "metricName": "plus.ssl.handshakes_timeout",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -2494,13 +1567,13 @@
             ],
             "metricName": "plus.cache.hit.ratio",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -2619,13 +1692,13 @@
             ],
             "metricName": "plus.http.upstream.peers.health_checks.checks",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -2660,13 +1733,13 @@
             ],
             "metricName": "plus.http.upstream.peers.health_checks.unhealthy",
             "metricNamespace": "nginx.nginxplus/nginxdeployments",
-            "region": "eastus2",
+            "region": "$region",
             "resources": [
               {
                 "metricNamespace": "nginx.nginxplus/nginxdeployments",
-                "region": "eastus2",
-                "resourceGroup": "akash-rg",
-                "resourceName":"akash-deploy"
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "$nginxResource"
               }
             ],
             "timeGrain": "auto"
@@ -2684,315 +1757,429 @@
       "type": "timeseries"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 38
-      },
+  "collapsed": false,
+  "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 38
+  },
   "id": 27,
-  "panels": [],
   "title": "Virtual Machines",
-  "type": "row"
+  "type": "row",
+  "panels": []
 },
-{
-  "datasource": {
-    "type": "grafana-azure-monitor-datasource",
-    "uid": "azure-monitor-oob"
-  },
-  "fieldConfig": {
-    "defaults": {
-      "color": {
-        "mode": "continuous-GrYlRd"
+    {
+      "id": 28,
+      "title": "Inbound Flows VM1",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 39 },
+      "datasource": { "type": "grafana-azure-monitor-datasource", "uid": "azure-monitor-oob" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-GrYlRd" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green" },
+              { "color": "red", "value": 80 }
+            ]
+          }
+        },
+        "overrides": []
       },
-      "custom": {
-        "axisBorderShow": false,
-        "axisCenteredZero": false,
-        "axisColorMode": "text",
-        "axisLabel": "",
-        "axisPlacement": "auto",
-        "barAlignment": 0,
-        "drawStyle": "line",
-        "fillOpacity": 20,
-        "gradientMode": "scheme",
-        "hideFrom": {
-          "legend": false,
-          "tooltip": false,
-          "viz": false
-        },
-        "insertNulls": false,
-        "lineInterpolation": "smooth",
-        "lineWidth": 3,
-        "pointSize": 5,
-        "scaleDistribution": {
-          "type": "linear"
-        },
-        "showPoints": "auto",
-        "spanNulls": false,
-        "stacking": {
-          "group": "A",
-          "mode": "none"
-        },
-        "thresholdsStyle": {
-          "mode": "off"
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "queryType": "Azure Monitor",
+          "refId": "A",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "alias": "Inbound Flows - ${vm1}",
+            "dimensionFilters": [],
+            "metricName": "Inbound Flows",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm1}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
         }
-      },
-      "mappings": [],
-      "thresholds": {
-        "mode": "absolute",
-        "steps": [
-          {
-            "color": "green"
-          },
-          {
-            "color": "red",
-            "value": 80
-          }
-        ]
-      }
+      ]
     },
-    "overrides": []
-  },
-  "gridPos": {
-    "h": 8,
-    "w": 12,
-    "x": 0,
-    "y": 39
-  },
-  "id": 28,
-  "options": {
-    "legend": {
-      "calcs": [],
-      "displayMode": "list",
-      "placement": "bottom",
-      "showLegend": true
-    },
-    "tooltip": {
-      "mode": "single",
-      "sort": "none"
-    }
-  },
-  "repeat": "vm",
-  "repeatDirection": "h",
-  "targets": [
     {
-      "azureMonitor": {
-        "aggregation": "Average",
-        "alias": "Inbound Flows - ${resourceName}",
-        "dimensionFilters": [],
-        "metricName": "Inbound Flows",
-        "metricNamespace": "microsoft.compute/virtualmachines",
-        "region": "eastus2",
-        "resources": [
-          {
-            "metricNamespace": "Microsoft.Compute/virtualMachines",
-            "region": "eastus2",
-            "resourceGroup": "akash-rg",
-            "resourceName": "akash-vm2"
+      "id": 29,
+      "title": "Inbound Flows VM2",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 39 },
+      "datasource": { "type": "grafana-azure-monitor-datasource", "uid": "azure-monitor-oob" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-GrYlRd" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green" },
+              { "color": "red", "value": 80 }
+            ]
           }
-        ],
-        "timeGrain": "auto"
+        },
+        "overrides": []
       },
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
       },
-      "queryType": "Azure Monitor",
-      "refId": "A"
+      "targets": [
+        {
+          "queryType": "Azure Monitor",
+          "refId": "A",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "alias": "Inbound Flows - ${vm2}",
+            "dimensionFilters": [],
+            "metricName": "Inbound Flows",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm2}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "System Metrics VM1",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 47 },
+      "datasource": { "type": "grafana-azure-monitor-datasource", "uid": "azure-monitor-oob" },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green" },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 85 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "queryType": "Azure Monitor",
+          "refId": "A",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "alias": "Disk Read - ${vm1}",
+            "dimensionFilters": [],
+            "metricName": "Disk Read Bytes",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm1}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        },
+        {
+          "queryType": "Azure Monitor",
+          "refId": "B",
+          "azureMonitor": {
+            "aggregation": "Total",
+            "alias": "Disk Write - ${vm1}",
+            "dimensionFilters": [],
+            "metricName": "Disk Write Bytes",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm1}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        },
+        {
+          "queryType": "Azure Monitor",
+          "refId": "C",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "alias": "CPU % - ${vm1}",
+            "dimensionFilters": [],
+            "metricName": "Percentage CPU",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm1}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        },
+        {
+          "queryType": "Azure Monitor",
+          "refId": "D",
+          "azureMonitor": {
+            "aggregation": "Total",
+            "alias": "Available Memory - ${vm1}",
+            "dimensionFilters": [],
+            "metricName": "Available Memory Bytes",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm1}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "System Metrics VM2",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 47 },
+      "datasource": { "type": "grafana-azure-monitor-datasource", "uid": "azure-monitor-oob" },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green" },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 85 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "queryType": "Azure Monitor",
+          "refId": "A",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "alias": "Disk Read - ${vm2}",
+            "dimensionFilters": [],
+            "metricName": "Disk Read Bytes",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm2}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        },
+        {
+          "queryType": "Azure Monitor",
+          "refId": "B",
+          "azureMonitor": {
+            "aggregation": "Total",
+            "alias": "Disk Write - ${vm2}",
+            "dimensionFilters": [],
+            "metricName": "Disk Write Bytes",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm2}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        },
+        {
+          "queryType": "Azure Monitor",
+          "refId": "C",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "alias": "CPU % - ${vm2}",
+            "dimensionFilters": [],
+            "metricName": "Percentage CPU",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm2}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        },
+        {
+          "queryType": "Azure Monitor",
+          "refId": "D",
+          "azureMonitor": {
+            "aggregation": "Total",
+            "alias": "Available Memory - ${vm2}",
+            "dimensionFilters": [],
+            "metricName": "Available Memory Bytes",
+            "metricNamespace": "Microsoft.Compute/virtualMachines",
+            "region": "$region",
+            "resources": [
+              {
+                "metricNamespace": "Microsoft.Compute/virtualMachines",
+                "region": "$region",
+                "resourceGroup": "$resourceGroup",
+                "resourceName": "${vm2}"
+              }
+            ],
+            "timeGrain": "auto"
+          }
+        }
+      ]
     }
   ],
-  "title": "Inbound Flows",
-  "type": "timeseries"
-},
-{
-  "datasource": {
-    "type": "grafana-azure-monitor-datasource",
-    "uid": "azure-monitor-oob"
-  },
-  "fieldConfig": {
-    "defaults": {
-      "mappings": [],
-      "thresholds": {
-        "mode": "percentage",
-        "steps": [
-          {
-            "color": "green"
-          },
-          {
-            "color": "orange",
-            "value": 70
-          },
-          {
-            "color": "red",
-            "value": 85
-          }
-        ]
-      }
-    },
-    "overrides": []
-  },
-  "gridPos": {
-    "h": 8,
-    "w": 12,
-    "x": 0,
-    "y": 47
-  },
-  "id": 29,
-  "options": {
-    "minVizHeight": 75,
-    "minVizWidth": 75,
-    "orientation": "auto",
-    "reduceOptions": {
-      "calcs": [
-        "lastNotNull"
-      ],
-      "fields": "",
-      "values": false
-    },
-    "showThresholdLabels": false,
-    "showThresholdMarkers": true,
-    "sizing": "auto"
-  },
-  "pluginVersion": "10.4.1",
-  "repeat": "vm",
-  "repeatDirection": "h",
-  "targets": [
-    {
-      "azureMonitor": {
-        "aggregation": "Average",
-        "alias": "Disk Read - ${resourceName}",
-        "dimensionFilters": [],
-        "metricName": "Disk Read Bytes",
-        "metricNamespace": "microsoft.compute/virtualmachines",
-        "region": "eastus2",
-        "resources": [
-          {
-            "metricNamespace": "Microsoft.Compute/virtualMachines",
-            "region": "eastus2",
-            "resourceGroup": "akash-rg",
-            "resourceName": "akash-vm2"
-          }
-        ],
-        "timeGrain": "auto"
-      },
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "queryType": "Azure Monitor",
-      "refId": "A"
-    },
-    {
-      "azureMonitor": {
-        "aggregation": "Total",
-        "alias": "Disk Write - ${resourceName}",
-        "dimensionFilters": [],
-        "metricName": "Disk Write Bytes",
-        "metricNamespace": "microsoft.compute/virtualmachines",
-        "region": "eastus2",
-        "resources": [
-          {
-            "metricNamespace": "Microsoft.Compute/virtualMachines",
-            "region": "eastus2",
-            "resourceGroup": "akash-rg",
-            "resourceName": "akash-vm2"
-          }
-        ],
-        "timeGrain": "auto"
-      },
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "queryType": "Azure Monitor",
-      "refId": "B"
-    },
-    {
-      "azureMonitor": {
-        "aggregation": "Count",
-        "alias": "CPU % - ${resourceName}",
-        "dimensionFilters": [],
-        "metricName": "Percentage CPU",
-        "metricNamespace": "microsoft.compute/virtualmachines",
-        "region": "eastus2",
-        "resources": [
-          {
-            "metricNamespace": "Microsoft.Compute/virtualMachines",
-            "region": "eastus2",
-            "resourceGroup": "akash-rg",
-            "resourceName": "akash-vm2"
-          }
-        ],
-        "timeGrain": "auto"
-      },
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "queryType": "Azure Monitor",
-      "refId": "C"
-    },
-    {
-      "azureMonitor": {
-        "aggregation": "Total",
-        "alias": "Available Memory - ${resourceName}",
-        "dimensionFilters": [],
-        "metricName": "Available Memory Bytes",
-        "metricNamespace": "microsoft.compute/virtualmachines",
-        "region": "eastus2",
-        "resources": [
-          {
-            "metricNamespace": "Microsoft.Compute/virtualMachines",
-            "region": "eastus2",
-            "resourceGroup": "akash-rg",
-            "resourceName": "akash-vm2"
-          }
-        ],
-        "timeGrain": "auto"
-      },
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "azure-monitor-oob"
-      },
-      "queryType": "Azure Monitor",
-      "refId": "D"
-    }
-  ],
-  "title": "System Metrics",
-  "type": "gauge"
-}],
-  "refresh": "1m",
-  "schemaVersion": 39,
-  "tags": [],
   "templating": {
     "list": [
       {
-        "name": "vm",
-        "label": "Virtual Machines",
-        "type": "query",
-        "datasource": {
-          "type": "grafana-azure-monitor-datasource",
-          "uid": "azure-monitor-oob"
-        },
-        "query": {
-          "queryType": "Azure Resource Graph",
-          "resourceGraph": {
-            "query": "resources | where type == 'microsoft.compute/virtualmachines' and resourceGroup == 'akash-rg' | project value = name, label = name",
-            "resultFormat": "table"
-          }
-        },
-        "multi": true,
-        "allValue": null,
-        "includeAll": false,
-        "refresh": 1,
-        "sort": 0
+        "name": "resourceGroup",
+        "type": "constant",
+        "query": "akash-rg",
+        "label": "Resource Group",
+        "hide": 2
+      },
+      {
+        "name": "region",
+        "type": "constant",
+        "query": "eastus2",
+        "label": "Region",
+        "hide": 2
+      },
+      {
+        "name": "nginxResource",
+        "type": "constant",
+        "query": "akash-deploy",
+        "label": "NGINX Resource",
+        "hide": 2
+      },
+      {
+        "name": "vm1",
+        "type": "constant",
+        "query": "akash-vm1",
+        "label": "VM 1",
+        "hide": 2
+      },
+      {
+        "name": "vm2",
+        "type": "constant",
+        "query": "akash-vm2",
+        "label": "VM 2",
+        "hide": 2
       }
     ]
-  },
-  "time": {
-    "from": "now-2d",
-    "to": "now"
   },
   "timepicker": {
     "hidden": false

@@ -26,3 +26,8 @@ provider "azuread" {
   # Use Azure CLI authentication (same as azurerm)
   use_cli = true
 }
+
+provider "azurerm" {
+  features {}
+  subscription_id = var.subscription_id
+}
