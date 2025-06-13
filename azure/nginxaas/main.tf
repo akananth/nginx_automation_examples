@@ -1,9 +1,7 @@
-
 provider "azurerm" {
   features {}
   subscription_id = var.subscription_id
 }
-
 
 locals {
   resource_group_name = var.resource_group_name != "" ? var.resource_group_name : "${var.project_prefix}-rg"
@@ -29,6 +27,17 @@ locals {
       source_port_range          = "*"
       destination_port_range     = "443"
       source_address_prefix      = "${var.admin_ip}/32"
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "allow-nginxaas-subnet"
+      priority                   = 115
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = var.subnet_prefix
       destination_address_prefix = "*"
     }
   ]
@@ -173,10 +182,9 @@ resource "azurerm_nginx_deployment" "main" {
   diagnose_support_enabled    = true
 
   identity {
-   type         = "SystemAssigned, UserAssigned" 
-   identity_ids = [azurerm_user_assigned_identity.main.id]
+    type         = "SystemAssigned, UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.main.id]
   }
-
 
   frontend_public {
     ip_address = [azurerm_public_ip.main.id]

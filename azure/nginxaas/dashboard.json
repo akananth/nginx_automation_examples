@@ -2789,7 +2789,7 @@
             "metricNamespace": "Microsoft.Compute/virtualMachines",
             "region": "eastus2",
             "resourceGroup": "akash-rg",
-            "resourceName": "${vm}"
+            "resourceName": "akash-vm2"
           }
         ],
         "timeGrain": "auto"
@@ -2871,7 +2871,7 @@
             "metricNamespace": "Microsoft.Compute/virtualMachines",
             "region": "eastus2",
             "resourceGroup": "akash-rg",
-            "resourceName": "${vm}"
+            "resourceName": "akash-vm2"
           }
         ],
         "timeGrain": "auto"
@@ -2896,7 +2896,7 @@
             "metricNamespace": "Microsoft.Compute/virtualMachines",
             "region": "eastus2",
             "resourceGroup": "akash-rg",
-            "resourceName": "${vm}"
+            "resourceName": "akash-vm2"
           }
         ],
         "timeGrain": "auto"
@@ -2921,7 +2921,7 @@
             "metricNamespace": "Microsoft.Compute/virtualMachines",
             "region": "eastus2",
             "resourceGroup": "akash-rg",
-            "resourceName": "${vm}"
+            "resourceName": "akash-vm2"
           }
         ],
         "timeGrain": "auto"
@@ -2946,7 +2946,7 @@
             "metricNamespace": "Microsoft.Compute/virtualMachines",
             "region": "eastus2",
             "resourceGroup": "akash-rg",
-            "resourceName": "${vm}"
+            "resourceName": "akash-vm2"
           }
         ],
         "timeGrain": "auto"
