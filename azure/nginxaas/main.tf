@@ -59,7 +59,7 @@ resource "azurerm_nginx_deployment" "main" {
     time_sleep.wait_1_minutes,
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
-    azurerm_subnet_network_security_group_association.main
+    azurerm_subnet_network_security_group_association.nsg_assoc
   ]
 
   name                      = substr("${var.project_prefix}-deploy", 0, 40)
@@ -80,7 +80,7 @@ resource "azurerm_nginx_deployment" "main" {
   }
 
   network_interface {
-    subnet_id = azurerm_subnet.main.id
+    subnet_id = azurerm_subnet.subnet_nginxaas.id
   }
 
   web_application_firewall {
