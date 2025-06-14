@@ -96,6 +96,35 @@ resource "azurerm_network_security_rule" "allow_ssh" {
   network_security_group_name = azurerm_network_security_group.main.name
 }
 
+resource "azurerm_network_security_rule" "allow-admin-ip-http" {
+  name                        = "allow-admin-ip-http"
+  priority                    = 115
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = "${var.admin_ip}/32"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.main.name
+}
+
+resource "azurerm_network_security_rule" "allow-admin-ip-https" {
+  name                        = "allow-admin-ip-https"
+  priority                    = 116
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "443"
+  source_address_prefix       = "${var.admin_ip}/32"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.main.name
+}
+
+
 resource "azurerm_network_security_rule" "allow_nginxaas_http" {
   name                        = "allow-nginxaas-http"
   priority                    = 115
@@ -104,7 +133,7 @@ resource "azurerm_network_security_rule" "allow_nginxaas_http" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "80"
-  source_address_prefix       = "${var.admin_ip}/32"
+  source_address_prefix       = azurerm_public_ip.main.ip_address
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.main.name
@@ -118,8 +147,8 @@ resource "azurerm_network_security_rule" "allow_nginxaas_https" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "443"
-  source_address_prefix       = "${var.admin_ip}/32"
+  source_address_prefix       = azurerm_public_ip.main.ip_address
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.main.name
-}
+}  
