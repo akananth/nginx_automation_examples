@@ -49,6 +49,11 @@ resource "azurerm_subnet" "subnet_nginxaas" {
   }
 }
 
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc_nginxaas" {
+  subnet_id                 = azurerm_subnet.subnet_nginxaas.id
+  network_security_group_id = azurerm_network_security_group.main.id
+}
+
 resource "azurerm_virtual_network_peering" "vms_to_nginxaas" {
   name                          = "${var.project_prefix}-vms-to-nginxaas"
   resource_group_name           = azurerm_resource_group.main.name
@@ -99,7 +104,7 @@ resource "azurerm_network_security_rule" "allow_nginxaas_http" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "80"
-  source_address_prefix       = azurerm_public_ip.main.ip_address
+  source_address_prefix       = "${var.admin_ip}/32"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.main.name
@@ -113,7 +118,7 @@ resource "azurerm_network_security_rule" "allow_nginxaas_https" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "443"
-  source_address_prefix       = azurerm_public_ip.main.ip_address
+  source_address_prefix       = "${var.admin_ip}/32"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.main.name

@@ -60,6 +60,7 @@ resource "azurerm_nginx_deployment" "main" {
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
     azurerm_subnet_network_security_group_association.nsg_assoc
+    azurerm_subnet_network_security_group_association.nsg_assoc_nginxaas
   ]
 
   name                      = substr("${var.project_prefix}-deploy", 0, 40)
