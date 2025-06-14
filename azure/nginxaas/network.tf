@@ -55,6 +55,15 @@ resource "azurerm_virtual_network_peering" "nginxaas_to_vms" {
   allow_virtual_network_access = true
 }
 
+resource "azurerm_public_ip" "main" {
+  name                = "${var.project_prefix}-public-ip"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+
 # NSG Rules - unchanged, no changes needed here
 resource "azurerm_network_security_rule" "allow_http" {
   name                        = "allow-http"
