@@ -59,7 +59,7 @@ resource "azurerm_nginx_deployment" "main" {
     time_sleep.wait_1_minutes,
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
-    azurerm_subnet_network_security_group_association.nsg_assoc
+    azurerm_subnet_network_security_group_association.nsg_assoc,
     azurerm_subnet_network_security_group_association.nsg_assoc_nginxaas
   ]
 
