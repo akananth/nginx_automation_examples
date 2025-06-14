@@ -48,10 +48,11 @@ resource "azurerm_role_assignment" "contributor" {
 }
 
 resource "azurerm_role_assignment" "network_contributor" {
-  scope                = azurerm_virtual_network.main.id
+  scope                = azurerm_virtual_network.vnet_nginxaas.id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_user_assigned_identity.main.principal_id
 }
+
 
 resource "azurerm_nginx_deployment" "main" {
   depends_on = [
