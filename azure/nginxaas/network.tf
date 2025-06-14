@@ -36,6 +36,17 @@ resource "azurerm_subnet" "subnet_nginxaas" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.vnet_nginxaas.name
   address_prefixes     = [var.subnet_prefix_nginxaas]
+
+  delegation {
+    name = "nginx_delegation"
+    service_delegation {
+      name = "NGINX.NGINXPLUS/nginxDeployments"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action",
+        "Microsoft.Network/virtualNetworks/subnets/join/action"
+      ]
+    }
+  }
 }
 
 resource "azurerm_virtual_network_peering" "vms_to_nginxaas" {
