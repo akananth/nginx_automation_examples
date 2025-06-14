@@ -1,47 +1,61 @@
-resource "azurerm_virtual_network" "main" {
-  name                = "${var.project_prefix}-vnet"
-  address_space       = var.address_space
-  location            = var.azure_region
+resource "azurerm_virtual_network" "vnet_vms" {
+  name                = "${var.project_prefix}-vnet-vms"
+  location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  tags                = var.tags
+  address_space       = ["10.10.0.0/16"]
 }
 
-resource "azurerm_subnet" "main" {
-  name                 = "${var.project_prefix}-subnet"
+resource "azurerm_subnet" "subnet_vms" {
+  name                 = "${var.project_prefix}-subnet-vms"
   resource_group_name  = azurerm_resource_group.main.name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.subnet_prefix]
-
-  delegation {
-    name = "nginx-delegation"
-    service_delegation {
-      name    = "NGINX.NGINXPLUS/nginxDeployments"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-    }
-  }
-}
-
-resource "azurerm_public_ip" "main" {
-  name                = "${var.project_prefix}-pip"
-  location            = var.azure_region
-  resource_group_name = azurerm_resource_group.main.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  tags                = var.tags
+  virtual_network_name = azurerm_virtual_network.vnet_vms.name
+  address_prefixes     = [var.subnet_prefix_vms]
 }
 
 resource "azurerm_network_security_group" "main" {
   name                = "${var.project_prefix}-nsg"
-  location            = var.azure_region
+  location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  tags                = var.tags
 }
 
-resource "azurerm_subnet_network_security_group_association" "main" {
-  subnet_id                 = azurerm_subnet.main.id
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
+  subnet_id                 = azurerm_subnet.subnet_vms.id
   network_security_group_id = azurerm_network_security_group.main.id
 }
 
+resource "azurerm_virtual_network" "vnet_nginxaas" {
+  name                = "${var.project_prefix}-vnet-nginxaas"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  address_space       = ["10.20.0.0/16"]
+}
+
+resource "azurerm_subnet" "subnet_nginxaas" {
+  name                 = "${var.project_prefix}-subnet-nginxaas"
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.vnet_nginxaas.name
+  address_prefixes     = [var.subnet_prefix_nginxaas]
+}
+
+resource "azurerm_virtual_network_peering" "vms_to_nginxaas" {
+  name                        = "${var.project_prefix}-vms-to-nginxaas"
+  resource_group_name         = azurerm_resource_group.main.name
+  virtual_network_name        = azurerm_virtual_network.vnet_vms.name
+  remote_virtual_network_id   = azurerm_virtual_network.vnet_nginxaas.id
+  allow_forwarded_traffic     = true
+  allow_virtual_network_access = true
+}
+
+resource "azurerm_virtual_network_peering" "nginxaas_to_vms" {
+  name                        = "${var.project_prefix}-nginxaas-to-vms"
+  resource_group_name         = azurerm_resource_group.main.name
+  virtual_network_name        = azurerm_virtual_network.vnet_nginxaas.name
+  remote_virtual_network_id   = azurerm_virtual_network.vnet_vms.id
+  allow_forwarded_traffic     = true
+  allow_virtual_network_access = true
+}
+
+# NSG Rules - unchanged, no changes needed here
 resource "azurerm_network_security_rule" "allow_http" {
   name                        = "allow-http"
   priority                    = 100

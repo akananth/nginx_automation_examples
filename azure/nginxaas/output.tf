@@ -3,10 +3,16 @@ output "resource_group_name" {
   value       = azurerm_resource_group.main.name
 }
 
-output "subnet_id" {
-  description = "ID of the created subnet"
-  value       = azurerm_subnet.main.id
+output "subnet_vms_id" {
+  description = "ID of the VM subnet"
+  value       = azurerm_subnet.subnet_vms.id
 }
+
+output "subnet_nginxaas_id" {
+  description = "ID of the NGINXaaS subnet"
+  value       = azurerm_subnet.subnet_nginxaas.id
+}
+
 
 output "managed_identity_id" {
   description = "ID of the user-assigned managed identity"

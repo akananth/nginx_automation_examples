@@ -17,11 +17,12 @@ resource "azurerm_network_interface" "vm_nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.main.id
+    subnet_id                     = azurerm_subnet.subnet_vms.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.vm_pip[count.index].id
   }
 }
+
 
 # Cloud-init template for NGINX Plus provisioning
 data "template_file" "cloud_init" {

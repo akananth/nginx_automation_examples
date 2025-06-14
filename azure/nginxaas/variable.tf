@@ -28,8 +28,6 @@ variable "grafana_admin_object_ids" {
   description = "List of Azure AD Object IDs to assign Grafana Viewer role"
 }
 
-
-
 variable "sku" {
   type        = string
   description = "NGINXaaS SKU tier"
@@ -42,16 +40,17 @@ variable "capacity" {
   default     = 10
 }
 
-variable "address_space" {
-  type        = list(string)
-  description = "Virtual network address space"
-  default     = ["10.0.0.0/16"]
+
+variable "subnet_prefix_vms" {
+  type        = string
+  default     = "10.10.1.0/24"
+  description = "Subnet CIDR block for VMs"
 }
 
-variable "subnet_prefix" {
+variable "subnet_prefix_nginxaas" {
   type        = string
-  description = "Subnet CIDR block"
-  default     = "10.0.1.0/24"
+  default     = "10.20.1.0/24"
+  description = "Subnet CIDR block for NGINXaaS"
 }
 
 variable "tags" {
