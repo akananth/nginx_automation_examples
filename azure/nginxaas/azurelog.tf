@@ -1,3 +1,4 @@
+#logging
 resource "azurerm_log_analytics_workspace" "nginx_logging" {
   name                = "${var.project_prefix}-azure-log"
   location            = azurerm_resource_group.main.location
@@ -16,7 +17,7 @@ resource "azurerm_monitor_diagnostic_setting" "nginx_diagnostics" {
     category = "NginxLogs"
   }
 
-   enabled_log {
+  enabled_log {
     category = "NginxSecurityLogs"
   }
 
