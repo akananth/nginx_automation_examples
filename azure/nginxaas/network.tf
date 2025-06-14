@@ -16,6 +16,7 @@ resource "azurerm_network_security_group" "main" {
   name                = "${var.project_prefix}-nsg"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
+  # tags = var.tags  # optional, if you have tags variable
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
@@ -38,21 +39,21 @@ resource "azurerm_subnet" "subnet_nginxaas" {
 }
 
 resource "azurerm_virtual_network_peering" "vms_to_nginxaas" {
-  name                        = "${var.project_prefix}-vms-to-nginxaas"
-  resource_group_name         = azurerm_resource_group.main.name
-  virtual_network_name        = azurerm_virtual_network.vnet_vms.name
-  remote_virtual_network_id   = azurerm_virtual_network.vnet_nginxaas.id
-  allow_forwarded_traffic     = true
-  allow_virtual_network_access = true
+  name                          = "${var.project_prefix}-vms-to-nginxaas"
+  resource_group_name           = azurerm_resource_group.main.name
+  virtual_network_name          = azurerm_virtual_network.vnet_vms.name
+  remote_virtual_network_id     = azurerm_virtual_network.vnet_nginxaas.id
+  allow_forwarded_traffic       = true
+  allow_virtual_network_access  = true
 }
 
 resource "azurerm_virtual_network_peering" "nginxaas_to_vms" {
-  name                        = "${var.project_prefix}-nginxaas-to-vms"
-  resource_group_name         = azurerm_resource_group.main.name
-  virtual_network_name        = azurerm_virtual_network.vnet_nginxaas.name
-  remote_virtual_network_id   = azurerm_virtual_network.vnet_vms.id
-  allow_forwarded_traffic     = true
-  allow_virtual_network_access = true
+  name                          = "${var.project_prefix}-nginxaas-to-vms"
+  resource_group_name           = azurerm_resource_group.main.name
+  virtual_network_name          = azurerm_virtual_network.vnet_nginxaas.name
+  remote_virtual_network_id     = azurerm_virtual_network.vnet_vms.id
+  allow_forwarded_traffic       = true
+  allow_virtual_network_access  = true
 }
 
 resource "azurerm_public_ip" "main" {
@@ -63,35 +64,7 @@ resource "azurerm_public_ip" "main" {
   sku                 = "Standard"
 }
 
-
-# NSG Rules - unchanged, no changes needed here
-resource "azurerm_network_security_rule" "allow_http" {
-  name                        = "allow-http"
-  priority                    = 100
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "80"
-  source_address_prefix       = "${var.admin_ip}/32"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.main.name
-  network_security_group_name = azurerm_network_security_group.main.name
-}
-
-resource "azurerm_network_security_rule" "allow_https" {
-  name                        = "allow-https"
-  priority                    = 110
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "443"
-  source_address_prefix       = "${var.admin_ip}/32"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.main.name
-  network_security_group_name = azurerm_network_security_group.main.name
-}
+# NSG RULES
 
 resource "azurerm_network_security_rule" "allow_ssh" {
   name                        = "allow-ssh"
