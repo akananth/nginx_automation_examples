@@ -53,6 +53,14 @@ resource "azurerm_role_assignment" "network_contributor" {
   principal_id         = azurerm_user_assigned_identity.main.principal_id
 }
 
+resource "azurerm_public_ip" "main" {
+  name                = "${var.project_prefix}-public-ip"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  tags                = var.tags
+}
 
 resource "azurerm_nginx_deployment" "main" {
   depends_on = [
@@ -62,14 +70,6 @@ resource "azurerm_nginx_deployment" "main" {
     azurerm_subnet_network_security_group_association.nsg_assoc_vm,
     azurerm_subnet_network_security_group_association.nsg_assoc_nginxaas
   ]
-
-resource "azurerm_public_ip" "main" {
-  name                = "${var.project_prefix}-public-ip"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
 
   name                      = substr("${var.project_prefix}-deploy", 0, 40)
   resource_group_name       = azurerm_resource_group.main.name
