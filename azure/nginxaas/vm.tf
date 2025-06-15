@@ -30,16 +30,13 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/cloud-init.tpl")
 
   vars = {
-    nginx_cert    = indent(6, var.nginx_plus_cert)
-    nginx_key     = indent(6, var.nginx_plus_key)
-    nginx_jwt     = indent(6, var.nginx_jwt)
     html_filename = count.index == 0 ? "coffee.html" : "tea.html"
     html_content  = indent(6, file("${path.module}/${count.index == 0 ? "coffee.html" : "tea.html"}"))
     server_ip     = azurerm_public_ip.vm_pip[count.index].ip_address
   }
 }
 
-# Create Ubuntu VMs with NGINX Plus
+# Create Ubuntu VMs with NGINX 
 resource "azurerm_linux_virtual_machine" "nginx_vm" {
   count               = 2
   name                = "${var.project_prefix}-vm${count.index + 1}"

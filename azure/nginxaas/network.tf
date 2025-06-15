@@ -83,7 +83,7 @@ resource "azurerm_network_security_rule" "allow-admin-ip-http" {
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
-  source_port_range           = "*"
+  source_port_range           = "*" 
   destination_port_range      = "80"
   source_address_prefix       = "${var.admin_ip}/32"
   destination_address_prefix  = "*"
@@ -104,6 +104,34 @@ resource "azurerm_network_security_rule" "allow-admin-ip-https" {
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.main.name
 }
+
+resource "azurerm_network_security_rule" "allow_nginxaas_http" {
+  name                        = "allow-nginxaas-http"
+  priority                    = 115
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = azurerm_public_ip.main.ip_address
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.main.name
+}
+
+resource "azurerm_network_security_rule" "allow_nginxaas_https" {
+  name                        = "allow-nginxaas-https"
+  priority                    = 116
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "443"
+  source_address_prefix       = azurerm_public_ip.main.ip_address
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.main.name
+  network_security_group_name = azurerm_network_security_group.main.name
+}  
 
 ############################ Security Groups Association ############################
 
