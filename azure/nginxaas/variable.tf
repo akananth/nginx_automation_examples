@@ -68,24 +68,6 @@ variable "ssh_public_key" {
   sensitive   = true
 }
 
-# File paths for cloud-init provisioning of NGINX Plus
-variable "nginx_plus_cert" {
-  description = "PEM certificate content as string"
-  type        = string
-  sensitive   = true
-}
-
-variable "nginx_plus_key" {
-  description = "PEM private key content as string"
-  type        = string
-  sensitive   = true
-}
-
-variable "nginx_jwt" {
-  description = "JWT license content as string"
-  type        = string
-  sensitive   = true
-}
 
 
 # Optional storage backend settings for remote state
