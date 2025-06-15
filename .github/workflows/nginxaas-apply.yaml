@@ -28,8 +28,6 @@ jobs:
         with:
           terraform_version: 1.3.0
 
-    
-
       - name: Terraform Init
         run: terraform init
 
@@ -37,7 +35,6 @@ jobs:
         run: terraform validate
 
       
-
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
         env:
@@ -49,13 +46,9 @@ jobs:
           TF_VAR_azure_region: ${{ vars.azure_region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
-          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
-          TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
-          TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
       - name: Install Azure Grafana CLI extension
         run: az extension add --name amg --upgrade --yes
-
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
@@ -68,9 +61,6 @@ jobs:
           TF_VAR_azure_region: ${{ vars.azure_region }}
           TF_VAR_storage_account_name: ${{ vars.storage_account_name }}
           TF_VAR_ssh_public_key: ${{ secrets.ssh_public_key }}
-          TF_VAR_nginx_jwt: ${{ secrets.NGINX_JWT }}
-          TF_VAR_nginx_plus_cert: ${{ secrets.nginx_plus_cert }}
-          TF_VAR_nginx_plus_key: ${{ secrets.nginx_plus_key }}
 
       - name: Extract Terraform Outputs
         id: outputs
