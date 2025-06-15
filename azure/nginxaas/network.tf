@@ -16,12 +16,6 @@ resource "azurerm_network_security_group" "main" {
   name                = "${var.project_prefix}-nsg"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  # tags = var.tags  # optional, if you have tags variable
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
-  subnet_id                 = azurerm_subnet.subnet_vms.id
-  network_security_group_id = azurerm_network_security_group.main.id
 }
 
 resource "azurerm_virtual_network" "vnet_nginxaas" {
@@ -49,11 +43,6 @@ resource "azurerm_subnet" "subnet_nginxaas" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "nsg_assoc_nginxaas" {
-  subnet_id                 = azurerm_subnet.subnet_nginxaas.id
-  network_security_group_id = azurerm_network_security_group.main.id
-}
-
 resource "azurerm_virtual_network_peering" "vms_to_nginxaas" {
   name                          = "${var.project_prefix}-vms-to-nginxaas"
   resource_group_name           = azurerm_resource_group.main.name
@@ -72,15 +61,7 @@ resource "azurerm_virtual_network_peering" "nginxaas_to_vms" {
   allow_virtual_network_access  = true
 }
 
-resource "azurerm_public_ip" "main" {
-  name                = "${var.project_prefix}-public-ip"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
-
-# NSG RULES
+### Inbound Rules for Admin IP ###
 
 resource "azurerm_network_security_rule" "allow_ssh" {
   name                        = "allow-ssh"
@@ -98,7 +79,7 @@ resource "azurerm_network_security_rule" "allow_ssh" {
 
 resource "azurerm_network_security_rule" "allow-admin-ip-http" {
   name                        = "allow-admin-ip-http"
-  priority                    = 115
+  priority                    = 110
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
@@ -112,7 +93,7 @@ resource "azurerm_network_security_rule" "allow-admin-ip-http" {
 
 resource "azurerm_network_security_rule" "allow-admin-ip-https" {
   name                        = "allow-admin-ip-https"
-  priority                    = 116
+  priority                    = 111
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
@@ -124,31 +105,14 @@ resource "azurerm_network_security_rule" "allow-admin-ip-https" {
   network_security_group_name = azurerm_network_security_group.main.name
 }
 
+############################ Security Groups Association ############################
 
-resource "azurerm_network_security_rule" "allow_nginxaas_http" {
-  name                        = "allow-nginxaas-http"
-  priority                    = 115
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "80"
-  source_address_prefix       = azurerm_public_ip.main.ip_address
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.main.name
-  network_security_group_name = azurerm_network_security_group.main.name
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc_nginxaas" {
+  subnet_id                 = azurerm_subnet.subnet_nginxaas.id
+  network_security_group_id = azurerm_network_security_group.main.id
 }
 
-resource "azurerm_network_security_rule" "allow_nginxaas_https" {
-  name                        = "allow-nginxaas-https"
-  priority                    = 116
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "443"
-  source_address_prefix       = azurerm_public_ip.main.ip_address
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.main.name
-  network_security_group_name = azurerm_network_security_group.main.name
-}  
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc_vm" {
+  subnet_id                 = azurerm_subnet.subnet_vms.id
+  network_security_group_id = azurerm_network_security_group.main.id
+}
