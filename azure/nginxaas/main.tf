@@ -47,7 +47,6 @@ resource "azurerm_resource_provider_registration" "nginx" {
   name = "NGINX.NGINXPLUS"
 }
 
-
 resource "time_sleep" "wait_1_minutes" {
   depends_on      = [azurerm_resource_provider_registration.nginx]
   create_duration = "60s"
