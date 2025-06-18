@@ -18,6 +18,10 @@ terraform {
       source  = "hashicorp/time"
       version = "~> 0.9.1"
     }
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 1.12"
+    }
   }
 }
 
@@ -28,4 +32,8 @@ provider "azuread" {
 provider "azurerm" {
   features {}
   subscription_id = var.subscription_id
+}
+
+provider "azapi" {
+  # no extra config needed usually
 }

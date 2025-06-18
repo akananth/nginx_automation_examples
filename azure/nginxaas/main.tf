@@ -24,17 +24,19 @@ resource "null_resource" "validate_admin_ip" {
 }
 
 
-data "azurerm_resource_provider" "nginx" {
-  name = "NGINX.NGINXPLUS"
+resource "azapi_resource_action" "register_nginx_provider" {
+  type        = "Microsoft.Resources/subscriptions/resourceproviders@2021-04-01"
+  resource_id = "/subscriptions/${var.subscription_id}/providers/NGINX.NGINXPLUS"
+  method      = "POST"
+  action      = "register"
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
-resource "azurerm_resource_provider_registration" "nginx" {
-  count = data.azurerm_resource_provider.nginx.registration_state == "Registered" ? 0 : 1
-  name  = "NGINX.NGINXPLUS"
-}
-
-resource "time_sleep" "wait_1_minutes" {
-  depends_on      = [azurerm_resource_provider_registration.nginx]
+resource "time_sleep" "wait_1_min" {
+  depends_on      = [azapi_resource_action.register_nginx_provider]
   create_duration = "60s"
 }
 
@@ -70,7 +72,7 @@ resource "azurerm_public_ip" "main" {
 
 resource "azurerm_nginx_deployment" "main" {
   depends_on = [
-    time_sleep.wait_1_minutes,
+    time_sleep.wait_1_min,
     azurerm_role_assignment.contributor,
     azurerm_role_assignment.network_contributor,
     azurerm_subnet_network_security_group_association.nsg_assoc_vm,
