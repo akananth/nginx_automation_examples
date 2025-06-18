@@ -23,9 +23,6 @@ resource "null_resource" "validate_admin_ip" {
   }
 }
 
-# resource "azurerm_resource_provider_registration" "nginx" {
-#   name = "NGINX.NGINXPLUS"
-# }
 
 # Step 1: Check if the NGINX provider is already registered using Azure CLI
 data "external" "nginx_provider_check" {
