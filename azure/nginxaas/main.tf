@@ -23,20 +23,27 @@ resource "null_resource" "validate_admin_ip" {
   }
 }
 
+resource "null_resource" "register_nginx_provider" {
+  provisioner "local-exec" {
+    command = <<EOT
+      state=$(az provider show --namespace NGINX.NGINXPLUS --query "registrationState" -o tsv)
+      if [ "$state" != "Registered" ]; then
+        echo "Registering NGINX.NGINXPLUS provider..."
+        az provider register --namespace NGINX.NGINXPLUS --wait
+      else
+        echo "Provider already registered. Skipping registration."
+      fi
+    EOT
+    interpreter = ["/bin/bash", "-c"]
+  }
 
-resource "azapi_resource_action" "register_nginx_provider" {
-  type        = "Microsoft.Resources/subscriptions/resourceproviders@2021-04-01"
-  resource_id = "/subscriptions/${var.subscription_id}/providers/NGINX.NGINXPLUS"
-  method      = "POST"
-  action      = "register"
-
-  lifecycle {
-    ignore_changes = all
+  triggers = {
+    always_run = timestamp()
   }
 }
 
 resource "time_sleep" "wait_1_min" {
-  depends_on      = [azapi_resource_action.register_nginx_provider]
+  depends_on      = [null_resource.register_nginx_provider]
   create_duration = "60s"
 }
 
