@@ -101,16 +101,16 @@ jobs:
             echo "Resource group $RG_NAME does not exist, skipping deletion."
           fi
 
-      - name: Unregister NGINX Resource Provider (Optional)
-        run: |
-          echo "Checking NGINX.NGINXPLUS provider registration state..."
-          STATE=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "NotFound")
+      #- name: Unregister NGINX Resource Provider (Optional)
+       # run: |
+        #  echo "Checking NGINX.NGINXPLUS provider registration state..."
+           # STATE=$(az provider show --namespace NGINX.NGINXPLUS --query registrationState -o tsv 2>/dev/null || echo "NotFound")
 
-          if [[ "$STATE" == "Registered" ]]; then
-            echo "Unregistering NGINX.NGINXPLUS provider..."
-            az provider unregister --namespace NGINX.NGINXPLUS --wait || echo "Provider unregister failed or timed out."
-          else
-            echo "NGINX provider already unregistered or not found."
-          fi
+           # if [[ "$STATE" == "Registered" ]]; then
+            #  echo "Unregistering NGINX.NGINXPLUS provider..."
+            #  az provider unregister --namespace NGINX.NGINXPLUS --wait || echo "Provider unregister failed or timed out."
+           # else
+            #  echo "NGINX provider already unregistered or not found."
+           # fi
 
       
